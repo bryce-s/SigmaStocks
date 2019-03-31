@@ -2,7 +2,7 @@
 
 todo:
 ```
-training system for past data (for past data)
+training system for past data
 rss system # (for live data)
 system to pull from a finance api # sanket wants to do this
 machine learning blah blah classification
