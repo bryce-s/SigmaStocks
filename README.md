@@ -13,9 +13,12 @@ a front end
 
 # Specs:
 
-Training System\
+Training System
 
-```usage: ./classifier < training_data.json```\
+
+```usage: ./classifier < training_data.json```
+
+
 training_data.json
 ```
 {
