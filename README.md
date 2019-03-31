@@ -11,7 +11,8 @@ use ML data to make future predicitons
 a front end
 ```
 
-#Specs:
+# Specs:
+
 Training System
 ```usage: ./classifier < training_data.json```
 training_data.json
