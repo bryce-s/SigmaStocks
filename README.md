@@ -16,7 +16,7 @@ a front end
 Training System
 
 
-```usage: ./classifier < training_data.json```
+```usage: ./classifier training_data.json # or, make our own format and pipe it in.. i like json``` 
 
 
 training_data.json
