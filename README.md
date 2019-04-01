@@ -1,15 +1,31 @@
-# final_project
+# Project Overview
 
-todo:
-```
-training system for past data (for past data)
-rss system # (for live data)
-system to pull from a finance api # sanket wants to do this
-machine learning blah blah classification
-use ML data to make future predicitons
-"hureistics?" # sanket also wants to do this..
-a front end
-```
+Training Steps:
+
+- Fetch Article
+- Generate Sentiment
+- Get Stock Movement
+- Assign += 1
+
+
+## Fetching Articles
+
+``
+{
+  "APPL:": {
+    "news_source": "WSJ"
+    "id": "12391290",
+    "title": "airplay flails again, good work APPL",
+    "date": "2029-09-11T00:00:00.000Z"
+  },
+  "BRYCE:": {
+    "news_source": "CNBC"
+    "id": "69696969",
+    "title": "Bryce buys a llama",
+    "date": {}
+  }
+}
+``
 
 
 
