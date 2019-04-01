@@ -1,5 +1,7 @@
 # Project Overview
 
+github url: https://github.com/bryce-s/final_project
+
 Training Steps:
 
 - Fetch Article
