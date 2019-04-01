@@ -1,0 +1,9 @@
+{
+    // how often our server should retrain
+    // IN SECONDS
+    "refresh_time": 2000,
+    // how long should we wait to see if our
+    // prediction's correct?
+    "days_forward_to_compare": 1
+
+}
