@@ -1,11 +1,11 @@
 {
     "1": {
       "news_source": "WSJ",
-      "rrs_link": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml"
+      "rss_link": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml"
     },
     "2": {
       "news_source": "MarketWatch",
-      "rrs_link": ""
+      "rss_link": ""
     },
     "3": {
       "news_source": "CNBC",
