@@ -5,7 +5,8 @@ class Ticker:
     def __init__(self, exchangeList=["NASDAQ", "NYSE", "AMEX"], debug=False):
         self.ticker_dict = self.create_ticker_dict(exchangeList, debug)
 
-    # Input: Company name
+    # Input: Company name (str)
+    # Output: Ticker (str)
     def get_ticker(self, company_name):
         assert isinstance(company_name, str)
         for ticker, name in self.ticker_dict.items():
@@ -14,6 +15,8 @@ class Ticker:
             else:
                 return None
 
+    # Input: Ticker (str) 
+    # Output: Company name (str)
     def get_company_name(self, ticker):
         assert isinstance(ticker, str)
         try:
