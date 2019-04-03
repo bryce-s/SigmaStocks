@@ -7,7 +7,7 @@ class Ticker:
 
     # Input: Company name (str)
     # Output: Ticker (str)
-    def get_ticker(self, company_name):
+    def get_ticker(self, company_name: str):
         assert isinstance(company_name, str)
         for ticker, name in self.ticker_dict.items():
             if company_name in name:
@@ -17,7 +17,7 @@ class Ticker:
 
     # Input: Ticker (str) 
     # Output: Company name (str)
-    def get_company_name(self, ticker):
+    def get_company_name(self, ticker: str):
         assert isinstance(ticker, str)
         try:
             return self.ticker_dict[ticker]
