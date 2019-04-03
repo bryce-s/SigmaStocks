@@ -9,15 +9,21 @@ class Stock_Obj:
     def __init__(self, ticker: str):
         self.ticker = ticker
 
+    # Input: None
+    # Output: current price
     def get_current_value(self):
         return Stock(self.ticker).get_price()
 
+    # Input: Date
+    # Output: Stock movement for Date - 1 Day
     def get_prev_day_movement(self, date=datetime.today().date()):
         end = date - timedelta(days=1)
         prev_val = get_historical_data(self.ticker, end, date)[
             str(end)]['open']
         return round(((self.get_current_value() - prev_val)/prev_val), 4)
 
+    # Input: Date, Delta
+    # Output: Movement from Date - 1 to Date
     def get_delta_calculation(self, date=datetime.today(), delta=24):
         end = date + timedelta(hours=delta)
         historical_data = get_historical_data(self.ticker, date, end)
