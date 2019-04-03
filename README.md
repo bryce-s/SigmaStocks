@@ -30,7 +30,7 @@ news sources to train data and make predictions.
     "date": "2029-09-11T00:00:00.000Z"
   },
   "2": {
-    "ticker": FB
+    "ticker": "FB"
     "news_source": "MarketWatch",
     "title": "Facebook buys a llama",
     "date": "2029-09-11T00:00:00.000Z"
@@ -40,9 +40,7 @@ news sources to train data and make predictions.
 
 ## Get Stock Movment
 
-Compare date stock price withstock price at some future time (how do we define this? Maybe a week or day)
-
-- time to compare (in the future) should be a parameter to this module! 
+Compare date stock price withstock price at some future time (how do we define this? Maybe a week or day) time to compare (in the future) should be a parameter to this module! 
 
 ./get_stock_movement time_to_compare
 

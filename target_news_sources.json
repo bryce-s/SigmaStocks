@@ -3,5 +3,60 @@
       "news_source": "WSJ",
       "rrs_link": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml"
     },
-    "2": {}
+    "2": {
+      "news_source": "MarketWatch",
+      "rrs_link": ""
+    },
+    "3": {
+      "news_source": "CNBC",
+      "rss_link": "https://www.cnbc.com/id/15839069/device/rss/rss.html"
+    },
+    "4": {
+      "news_source": "Yahoo",
+      "rss_link": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=yhoo&region=US&lang=en-US"
+    },
+    "5": {
+      "news_source": "SeekingAlpha",
+      "rss_link": "http://seekingalpha.com/feed.xml"
+    },
+    "6": {
+      "news_source": "Investing.com",
+      "rss_link": "https://www.investing.com/rss/news_25.rss"
+    },
+    "7": {
+      "news_source": "WallStreetSurvivor",
+      "rss_link": "https://blog.wallstreetsurvivor.com/feed/"
+    },
+    "8": {
+      "news_source": "StocksToTrade.com",
+      "rss_link": "https://stockstotrade.com/blog/feed/"
+    },
+    "9": {
+      "news_source": "Barron's",
+      "rss_link": "https://blogs.barrons.com/stockstowatchtoday/feed/"
+    },
+    "10": {
+      "news_source": "PhilsStockWorld",
+      "rss_link": "http://welcome.philstockworld.com/feed/"
+    },
+    "11": {
+      "news_source": "PennyStockDream",
+      "rss_link": "http://www.pennystockdream.com/blog/rss"
+    },
+    "12": {
+      "news_source": "Reddit",
+      "rss_link": "https://www.reddit.com/r/stocks/.rss"
+    },
+    "13": {
+      "news_source": "NinjaTrader",
+      "rss_link": "https://ninjatrader.com/blog/feed/"
+    },
+    "14": {
+      "news_source": "TheMotleyFool",
+      "rss_link": "http://www.fool.ca/feed/"
+    },
+    "15": {
+      "news_source": "AussieStockForums",
+      "rss_link": "https://www.aussiestockforums.com/forums/-/index.rss"
+    }
 }
