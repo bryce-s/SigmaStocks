@@ -20,6 +20,7 @@ It's still readable. Meagan disapproves, -4
 
 The application will target a small number of
 news sources to train data and make predictions.
+sources: http://www.marketwatch.com/rss/topstories
 
 ```
 {

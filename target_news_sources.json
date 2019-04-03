@@ -58,5 +58,21 @@
     "15": {
       "news_source": "AussieStockForums",
       "rss_link": "https://www.aussiestockforums.com/forums/-/index.rss"
+    },
+    "16": {
+      "news_source": "TheEconomicTimes",
+      "rss_link": "https://economictimes.indiatimes.com/markets/stocks/rssfeeds/2146842.cms"
+    },
+    "17": {
+      "news_source": "MQL5",
+      "rss_link": "https://www.mql5.com/en/blogs/rss"
+    },
+    "18": {
+      "news_source": "INO.com",
+      "rss_link": "https://www.ino.com/blog/feed/"
+    },
+    "19": {
+      "news_source": "StockTrader",
+      "rss_link": "https://www.stocktrader.com/blog/feed/"
     }
 }
