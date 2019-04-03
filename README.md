@@ -15,6 +15,49 @@ Training Steps:
 It's still readable. Meagan disapproves, -4
 ![alt text](https://i.imgur.com/rArxpK4.png "Logo Title Text 1")
 
+## Quickstart
+
+Once the dependencies are installed, you can start the api with the following command:
+
+```bash
+npm run production
+```
+
+That will start the server on port 7082. To run the development server with hot module reloading, run:
+
+```bash
+npm run start
+```
+
+That will start the webpack dev server on port 7081.
+
+## Tests
+
+To run the Javascript tests (located in `src/tests/`), run:
+
+```bash
+npm run jest
+```
+
+To run the Python tests (located in `server/tests/`), run:
+
+```bash
+pytest
+```
+
+## Linting
+
+To lint the Javascript files (located in `src`), run:
+
+```bash
+npm run lint-js
+```
+
+To lint the Python files (located in `server`), run:
+
+```bash
+npm run lint-py
+```
 
 ## Fetching Articles
 
@@ -31,7 +74,7 @@ sources: http://www.marketwatch.com/rss/topstories
     "date": "2029-09-11T00:00:00.000Z"
   },
   "2": {
-    "ticker": "FB"
+    "ticker": FB
     "news_source": "MarketWatch",
     "title": "Facebook buys a llama",
     "date": "2029-09-11T00:00:00.000Z"
@@ -41,7 +84,9 @@ sources: http://www.marketwatch.com/rss/topstories
 
 ## Get Stock Movment
 
-Compare date stock price withstock price at some future time (how do we define this? Maybe a week or day) time to compare (in the future) should be a parameter to this module! 
+Compare date stock price withstock price at some future time (how do we define this? Maybe a week or day)
+
+- time to compare (in the future) should be a parameter to this module! 
 
 ./get_stock_movement time_to_compare
 
