@@ -23,7 +23,7 @@ Once the dependencies are installed, you can start the api with the following co
 npm run production
 ```
 
-That will start the server on port 7082. To run the development server with hot module reloading, run:
+That will start the server. To run the development server with hot module reloading, run:
 
 ```bash
 npm run start
