@@ -7,5 +7,5 @@ pylint==2.3.1
 six==1.12.0
 sty==1.0.0b9
 typed-ast==1.3.1
+virtualenv==16.4.3
 wrapt==1.11.1
-iexfinance==0.4.0
