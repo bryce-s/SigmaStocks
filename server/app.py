@@ -11,11 +11,15 @@ CORS(app)
 ##
 
 
-@app.route('/api/items')
-def items():
+@app.route('/api/portfolio')
+def portfolio():
     '''Sample API route for data'''
-    return jsonify([{'title': 'A'}, {'title': 'B'}])
+    return jsonify([{'portfolioValue': 100}])
 
+
+@app.route('/api/stocks')
+def getInvestedStocks():
+    return jsonify([{'companyName': 'Apple', 'ticker': 'AAPL', 'movement': '+6.03'}, {'companyName': 'Microsoft', 'ticker': 'MSFT', 'movement': '-2.8'}, {'companyName': 'Tesla', 'ticker': 'TSLA', 'movement': '-1.3'}])
 ##
 # View route
 ##
