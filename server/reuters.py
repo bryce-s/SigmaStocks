@@ -49,8 +49,8 @@ class ReutersCrawler(object):
 
     def fetch_content(self, task, date_range):
         # https://uk.reuters.com/info/disclaimer
-        ticker, name, exchange, market_cap = task
-        print("%s - %s - %s - %s" % (ticker, name, exchange, market_cap))
+        ticker, name, exchange = task
+        print("%s - %s - %s" % (ticker, name, exchange))
 
         suffix = {'AMEX': '.A', 'NASDAQ': '.O', 'NYSE': '.N'}
         # e.g. https://www.reuters.com/finance/stocks/company-news/BIDU.O?date=09262017
@@ -173,7 +173,7 @@ class ReutersCrawler(object):
         with open(self.ticker_list_filename) as ticker_list:
             for line in ticker_list:  # iterate all possible tickers
                 task = tuple(line.strip().split(','))
-                ticker, name, exchange, market_cap = task
+                ticker, name, exchange = task
                 if ticker in finished_tickers:
                     continue
                 if ticker in failed_tickers:
