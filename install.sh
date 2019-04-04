@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 set -e
 set -x
-# source env/bin/activate
-pip3 install -r requirements.txt
+source env/bin/activate
+pip install -r requirements.txt
 npm install --no-optional
