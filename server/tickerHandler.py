@@ -15,13 +15,13 @@ class Ticker:
             else:
                 return None
 
-    # Input: Ticker (str) 
+    # Input: Ticker (str)
     # Output: Company name (str)
     def get_company_name(self, ticker: str):
         assert isinstance(ticker, str)
         try:
             return self.ticker_dict[ticker]
-        except:
+        except BaseException:
             return None
 
     # Input: List of exchanges, debug option
@@ -44,7 +44,7 @@ class Ticker:
                     if line[0] not in ticker_dict.keys():
                         ticker_dict[line[0]] = line[1]
                 break
-            except:
+            except BaseException:
                 continue
         return ticker_dict
 

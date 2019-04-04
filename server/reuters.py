@@ -53,7 +53,8 @@ class ReutersCrawler(object):
         print("%s - %s - %s" % (ticker, name, exchange))
 
         suffix = {'AMEX': '.A', 'NASDAQ': '.O', 'NYSE': '.N'}
-        # e.g. https://www.reuters.com/finance/stocks/company-news/BIDU.O?date=09262017
+        # e.g.
+        # https://www.reuters.com/finance/stocks/company-news/BIDU.O?date=09262017
         url = "https://www.reuters.com/finance/stocks/company-news/" + \
             ticker + suffix[exchange]
 
@@ -62,7 +63,8 @@ class ReutersCrawler(object):
 
         news_num = self.get_news_num_whenever(url)
         if news_num:
-            # this company has news, then fetch for N consecutive days in the past
+            # this company has news, then fetch for N consecutive days in the
+            # past
             has_content, no_news_days = self.fetch_within_date_range(
                 news_num, url, date_range, task, ticker)
             if not has_content:
@@ -98,7 +100,11 @@ class ReutersCrawler(object):
         # return the number of news
         soup = self.get_soup_with_repeat(url, repeat_times=4)
         if soup:
-            return len(soup.find_all("div", {'class': ['topStory', 'feature']}))
+            return len(
+                soup.find_all(
+                    "div", {
+                        'class': [
+                            'topStory', 'feature']}))
         return 0
 
     def fetch_within_date_range(self, news_num, url, date_range, task, ticker):
@@ -109,18 +115,20 @@ class ReutersCrawler(object):
         no_news_days = []
         for timestamp in date_range:
             # print timestamp on the same line
-            print('trying '+timestamp, end='\r', flush=True)
+            print('trying ' + timestamp, end='\r', flush=True)
             # change 20151231 to 12312015 to match reuters format
             new_time = timestamp[4:] + timestamp[:4]
             soup = self.get_soup_with_repeat(url + "?date=" + new_time)
-            if soup and self.parse_and_save_news(soup, task, ticker, timestamp):
+            if soup and self.parse_and_save_news(
+                    soup, task, ticker, timestamp):
                 missing_days = 0  # if get news, reset missing_days as 0
                 has_content = True
             else:
                 missing_days += 1
 
             # the more news_num, the longer we can wait
-            # e.g., if news_num is 2, we can wait up to 30 days; 10 news, wait up to 70 days
+            # e.g., if news_num is 2, we can wait up to 30 days; 10 news, wait
+            # up to 70 days
             if missing_days > news_num * 5 + 20:
                 # no news in X consecutive days, stop crawling
                 print("%s has no news for %d days, stop this candidate ..." %
@@ -159,14 +167,15 @@ class ReutersCrawler(object):
         base = datetime.datetime.today()
         date_range = [
             base - datetime.timedelta(days=x) for x in range(0, numdays)]
-        
+
         return [x.strftime("%Y%m%d") for x in date_range]
 
     def run(self, numdays=2000):
         """Start crawler back to numdays"""
         finished_tickers = self.load_finished_tickers()
         failed_tickers = self.load_failed_tickers()
-        date_range = self.generate_past_n_days(2000)  # look back on the past X days
+        date_range = self.generate_past_n_days(
+            2000)  # look back on the past X days
 
         # store low-priority task and run later
         delayed_tasks = {'LOWEST': set(), 'LOW': set()}
