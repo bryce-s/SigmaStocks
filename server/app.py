@@ -41,6 +41,7 @@ app = Flask(__name__)
 
 CORS(app)
 
+
 @app.route('/')
 def index():
     return "Hello, World!"
@@ -54,8 +55,12 @@ def portfolio():
 
 @app.route('/api/stocks', methods=['GET'])
 def getInvestedStocks():
-    stocks = [{'companyName': 'Apple', 'ticker': 'AAPL', 'movement': '+6.03'}, {'companyName': 'Microsoft',
-                                                                                'ticker': 'MSFT', 'movement': '-2.8'}, {'companyName': 'Tesla', 'ticker': 'TSLA', 'movement': '-1.3'}]
+    stocks = [
+        {'companyName': 'Apple', 'ticker': 'AAPL', 'movement': '+6.03'},
+        {'companyName': 'Microsoft', 'ticker': 'MSFT', 'movement': '-2.8'},
+        {'companyName': 'Tesla', 'ticker': 'TSLA', 'movement': '-1.3'},
+        {'companyName': 'Google', 'ticker': 'GOOG', 'movement': '+3.4'}
+    ]
     return jsonify(stocks)
 
 

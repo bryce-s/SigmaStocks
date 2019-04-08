@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Statistic, Card, Col, Icon } from 'antd'
+import { Statistic, Card, Icon } from 'antd'
+import { Col } from 'react-flexbox-grid'
 
 export default class CurrentInvestment extends Component {
 	constructor(props) {
@@ -58,7 +59,7 @@ export default class CurrentInvestment extends Component {
 
 	render() {
 		return (
-			<Col xs={4}>
+			<Col xs style={{ marginBottom: '3%' }}>
 				<Card
 					style={{ backgroundColor: this.getCardBackgroundColour() }}
 				>
@@ -74,20 +75,6 @@ export default class CurrentInvestment extends Component {
 							color: this.getTitleColour()
 						}}
 					/>
-					{/* <Divider
-						type="vertical"
-						style={{ height: '60px', marginLeft: '20%' }}
-					/>
-					<div
-						style={{
-                            float: 'right',
-                            marginLeft: '2%',
-							marginRight: '6%',
-							textAlign: 'center'
-						}}
-					>
-						Chart
-					</div> */}
 				</Card>
 			</Col>
 		)

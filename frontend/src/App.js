@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import './App.css'
 import axios from 'axios'
 import CurrentInvestment from './CurrentInvestment/CurrentInvestment'
-import { Row, Col, Typography, Switch } from 'antd'
+import { Typography, Switch } from 'antd'
+import { Row } from 'react-flexbox-grid'
 
 const { Title } = Typography
 
@@ -90,8 +91,13 @@ class App extends Component {
 					style={{ marginBottom: '1%' }}
 				/>
 
-				<Row gutter={8} id="currentStocks">
-					<Col xs={2} sm={4} md={6} />
+				<Row
+					id="currentStocks"
+					style={{
+						marginLeft: '1%',
+						marginRight: '1%'
+					}}
+				>
 					{this.state.investmentArray.map((currStock, index) => (
 						<CurrentInvestment
 							key="stock_{index}"
@@ -100,7 +106,6 @@ class App extends Component {
 							theme={this.state.theme}
 						/>
 					))}
-					<Col xs={2} sm={4} md={6} />
 				</Row>
 			</div>
 		)

@@ -7,6 +7,7 @@
     "babel-loader": "8.0.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-flexbox-grid": "^2.1.2",
     "react-scripts": "2.1.8"
   },
   "scripts": {
