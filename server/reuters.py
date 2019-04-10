@@ -170,12 +170,12 @@ class ReutersCrawler(object):
 
         return [x.strftime("%Y%m%d") for x in date_range]
 
-    def run(self, numdays=2000):
+    def run(self, numdays=60):
         """Start crawler back to numdays"""
         finished_tickers = self.load_finished_tickers()
         failed_tickers = self.load_failed_tickers()
         date_range = self.generate_past_n_days(
-            2000)  # look back on the past X days
+            60)  # look back on the past X days
 
         # store low-priority task and run later
         delayed_tasks = {'LOWEST': set(), 'LOW': set()}

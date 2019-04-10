@@ -17,46 +17,16 @@ It's still readable. Meagan disapproves, -4
 
 ## Quickstart
 
-Once the dependencies are installed, you can start the api with the following command:
+Start server on Port 8080
 
 ```bash
-npm run production
+python3 server/app.py
 ```
 
-That will start the server. To run the development server with hot module reloading, run:
+Start Front End on Port 3000
 
 ```bash
 npm run start
-```
-
-That will start the webpack dev server on port 7081.
-
-## Tests
-
-To run the Javascript tests (located in `src/tests/`), run:
-
-```bash
-npm run jest
-```
-
-To run the Python tests (located in `server/tests/`), run:
-
-```bash
-pytest
-```
-
-## Linting
-
-To lint the Javascript files (located in `src`), run:
-
-```bash
-npm run lint-js
-```
-
-To lint the Python files (located in `server`), run:
-
-```bash
-npm run lint-py
 ```
 
 ## Fetching Articles
