@@ -10,6 +10,8 @@ from iexfinance.stocks import Stock
 starting_wealth = 1000000000
 
 # function handles taking headline and returning sentiment score
+
+
 def get_average_sentiment(input_list):
     sia = SentimentIntensityAnalyzer()
     total = 0.0
@@ -24,15 +26,19 @@ def get_average_sentiment(input_list):
     print(average)
 
 # function handles updating the portfolio by retrieving new articles, recalculating sentiment, and changing position
+
+
 def update_portfolio():
     pass
 
 # function handles the initialization of the portfolio
+
+
 def initialize_portfolio():
     conn = sqlite3.connect("portfolio.db")
     c = conn.cursor()
     total_value = 0
-	
+
     with open("../tickers.txt") as tickers:
         # go through each ticker in the s&p 500
         for ticker in tickers:
@@ -57,17 +63,20 @@ def initialize_portfolio():
                 ticker_cap = num_shares * ticker_price
 
                 # add entry to portfolio database
-                query_string = "insert into assets values({}, {}, {}, {})".format(ticker, ticker_sentiment, ticker_price, num_shares)
+                query_string = "insert into assets values({}, {}, {}, {})".format(
+                    ticker, ticker_sentiment, ticker_price, num_shares)
                 c.execute(query_string)
                 conn.commit()
-                
+
                 # subtract total amount from initial amount
                 starting_wealth -= ticker_cap
 
     print(total_value)
     conn.close()
 
+
 initialize_portfolio()
 
-test = ["the movie was awesome", "the movie was great!!!!!", "the movie was pretty great and the popcorn was delicious.", "the plot was amazing!!", "the acting rocked. I can't believe the movie was that good"]
+test = ["the movie was awesome", "the movie was great!!!!!", "the movie was pretty great and the popcorn was delicious.",
+        "the plot was amazing!!", "the acting rocked. I can't believe the movie was that good"]
 # get_average_sentiment(test)

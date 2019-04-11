@@ -6,15 +6,18 @@ import csv
 import re
 from tickerHandler import Ticker
 
+
 def check_type(*arg):
     """checks types of sucessive args"""
     assert len(arg) % 2 == 0
     for i in range(0, len(arg)-1):
         if i % 2 == 0:
-           assert isinstance(arg[i], arg[i+1])
+            assert isinstance(arg[i], arg[i+1])
+
 
 class TitleInfo:
     """stores an array of titles and any associated data we may want"""
+
     def __init__(self):
         self.titles = set()
 
@@ -31,9 +34,9 @@ class TitleInfo:
         return resDicts
 
 
-
 class TickerToInfo:
     """cleanly maps ticker to ticker info, no dict abuse required"""
+
     def __init__(self):
         self.ticker_to_info = dict()
 
@@ -44,14 +47,14 @@ class TickerToInfo:
             self.ticker_to_info[ticker].push_title(title)
         else:
             self.ticker_to_info[ticker].push_title(title)
-        
+
     def get_titles_for_ticker(self, ticker: str):
         return self.ticker_to_info[ticker].get_titles()
 
 
-
 class RssFetcher:
     """grabs rss things"""
+
     def __init__(self, input_company_list: str = "./target_news_sources.json"):
         assert isinstance(input_company_list, str)
         self.companies = str(input_company_list)
@@ -63,8 +66,10 @@ class RssFetcher:
             article_title2 = re.sub(r'[^a-zA-Z0-9\s]+', '', article_title)
             company_name = re.sub(r'[^a-zA-Z0-9\s]+', '', company_name)
             company_name = company_name.lower()
-            company_name = re.sub("(\scorp.)|(\scorp)|(\scorporation)|(\sinc.)|(\sthe)|(\scompany)|(\sinc)","",company_name)
-            company_name = re.sub("[ \t]+$","", company_name) # remove trailing whitespace
+            company_name = re.sub(
+                "(\scorp.)|(\scorp)|(\scorporation)|(\sinc.)|(\sthe)|(\scompany)|(\sinc)", "", company_name)
+            # remove trailing whitespace
+            company_name = re.sub("[ \t]+$", "", company_name)
             cname = ti.get_company_name(ticker)
             if " " + company_name in " " + article_title2.lower() or " " + ticker.lower() + " " in " " + article_title2.lower() + " ":
                 print("match: " + cname)
@@ -78,11 +83,6 @@ class RssFetcher:
                     continue
                 fs = frozenset(titleDict.items())
                 ticker_info.add_title(ticker.lower(), fs)
-
-
-
-
-
 
     def fetch_from_feed(self, ticker_info: TickerToInfo):
         check_type(ticker_info, TickerToInfo)
@@ -104,14 +104,15 @@ class RssFetcher:
                     ti = Ticker()
                     all_tickers = ti.ticker_dict
                     # o(n^2) (more or less)
-                    self.__process_tickers(ti, all_tickers, article_title, fi, ticker_info)
-                  
+                    self.__process_tickers(
+                        ti, all_tickers, article_title, fi, ticker_info)
 
 
 def main():
     """we normally shouldn't have a main for this module.."""
-    fetchbryce = RssFetcher() 
+    fetchbryce = RssFetcher()
     info = TickerToInfo()
     fetchbryce.fetch_from_feed(info)
+
 
 main()
