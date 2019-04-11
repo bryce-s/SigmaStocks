@@ -31,6 +31,8 @@ def update_portfolio():
 def initialize_portfolio():
     conn = sqlite3.connect("portfolio.db")
     c = conn.cursor()
+
+    global starting_wealth
     total_value = 0
 	
     with open("../tickers.txt") as tickers:
@@ -57,7 +59,7 @@ def initialize_portfolio():
                 ticker_cap = num_shares * ticker_price
 
                 # add entry to portfolio database
-                query_string = "insert into assets values({}, {}, {}, {})".format(ticker, ticker_sentiment, ticker_price, num_shares)
+                query_string = "insert into assets values('{}', {}, {}, {})".format(ticker, ticker_sentiment, ticker_price, num_shares)
                 c.execute(query_string)
                 conn.commit()
                 
