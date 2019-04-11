@@ -2,7 +2,7 @@
     "1": {
       "news_source": "WSJ",
       "rss_link": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml"
-    },
+    }redd,
     "2": {
       "news_source": "MarketWatch",
       "rss_link": ""
@@ -74,5 +74,33 @@
     "19": {
       "news_source": "StockTrader",
       "rss_link": "https://www.stocktrader.com/blog/feed/"
+    },
+    "20": {
+      "news_source": "Washington Post",
+      "rss_link": "https://www.washingtonpost.com/rss-feeds/2014/08/04/ab6f109a-1bf7-11e4-ae54-0cfe1f974f8a_story.html?noredirect=on&utm_term=.a6c0a2443494"
+    },
+    "21": {
+      "news_source": "Planet Money",
+      "rss_link": "https://www.npr.org/rss/podcast.php?id=510289"
+    },
+    "22": {
+      "news_source": "New York Times",
+      "rss_link": "https://www.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+    },
+    "23": {
+      "news_source": "New York Times - Business",
+      "rss_link": "http://feeds.nytimes.com/nyt/rss/Business"
+    },
+    "24": {
+      "news_source": "New York Times - Econ",
+      "rss_link": "https://www.nytimes.com/services/xml/rss/nyt/Economy.xml"
+    },
+    "25": {
+      "news_source": "Hacker News",
+      "rss_link": "https://hnrss.org/newest"
+    },
+    "26": {
+      "news_source": "BBC",
+      "rss_link": "http://feeds.bbci.co.uk/news/rss.xml"
     }
 }
