@@ -1,11 +1,12 @@
 CREATE TABLE overview(
-	current_day DATETIME PRIMARY KEY,
+	current_day DATE PRIMARY KEY,
 	current_value FLOAT,
 	current_sentiment FLOAT,
 	open_value FLOAT,
 	open_sentiment FLOAT,
 	value_change FLOAT,
-	sentiment_change FLOAT
+	sentiment_change FLOAT,
+	num_invested bigint
 );
 
 CREATE TABLE assets(

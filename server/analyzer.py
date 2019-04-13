@@ -5,6 +5,8 @@ import requests
 import json
 import sqlite3
 from iexfinance.stocks import Stock
+import datavide
+from datetime import date
 
 # starting values and global portfolio values
 starting_wealth = 1000000000
@@ -20,8 +22,11 @@ def get_average_sentiment(input_list):
         score = intensity["compound"]
         total += score
 
-    average = round(total / size, 8)
-    print(average)
+    if size != 0:
+        average = round(total / size, 8)
+        return(average)
+    else:
+        return(0)
 
 # function handles updating the portfolio by retrieving new articles, recalculating sentiment, and changing position
 def update_portfolio():
@@ -34,37 +39,60 @@ def initialize_portfolio():
 
     global starting_wealth
     total_value = 0
+    total_sentiment = 0
+    num_invested = 0
 	
     with open("../tickers.txt") as tickers:
         # go through each ticker in the s&p 500
         for ticker in tickers:
+            # parse endlines from tickers
             ticker = ticker.strip()
+            
+            # get current stock price
+            ticker_price = Stock(ticker).get_price()
 
-            # here we will use the custom api tool to fetch the articles for the given ticker
+            # here we will use the api tools to fetch the article headlines for the given ticker
+            headlines = datavide.datavide_headlines(ticker)
 
-            # calculate average sentiment score for the articles of the given ticker
-            # ticker_sentiment = get_average_sentiment()
-            ticker_sentiment = 1
+            # calculate average sentiment score for the article headlines of the given ticker
+            ticker_sentiment = 0
+            ticker_sentiment = get_average_sentiment(headlines)
+            print(ticker + " " + str(ticker_sentiment))
 
+            # set number of shares
+            num_shares = 0
+
+            # capitalization
+            ticker_cap = 0
+            
+            # if ticker sentiment is greater than 0, we will want to put this stock in our portfolio
             if ticker_sentiment > 0:
-                # get current stock price
-                ticker_price = Stock(ticker).get_price()
-                total_value += ticker_price
-                print(ticker + " " + str(ticker_price))
-
                 # set number of shares
                 num_shares = 5
 
                 # capitalization
                 ticker_cap = num_shares * ticker_price
+                total_value += ticker_cap
+                total_sentiment += ticker_sentiment
+                num_invested += 1
 
-                # add entry to portfolio database - this is a test
-                # query_string = "insert into assets values('{}', {}, {}, {})".format(ticker, ticker_sentiment, ticker_price, num_shares)
-                # c.execute(query_string)
-                # conn.commit()
-                
-                # subtract total amount from initial amount
-                starting_wealth -= ticker_cap
+            # insert into the database, we will still put assets into the database we do not have positions in
+            query_string = "insert into assets values('{}', {}, {}, {})".format(ticker, ticker_sentiment, ticker_price, num_shares)
+            c.execute(query_string)
+            conn.commit()
+
+    # update our overview table
+    # current_day
+    current_day = date.today()
+    current_value = total_value
+    current_sentiment = total_sentiment / num_invested
+    open_value = current_value
+    open_sentiment = current_sentiment
+    value_change = 0
+    sentiment_change = 0
+    overview_query = "insert into overview values({}, {}, {}, {}, {}, {}, {}, {})".format(current_day, current_value, current_sentiment, open_value, open_sentiment, value_change, sentiment_change, num_invested)
+    c.execute(overview_query)
+    conn.commit()
 
     print(total_value)
     conn.close()
