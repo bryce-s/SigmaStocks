@@ -58,10 +58,10 @@ def initialize_portfolio():
                 # capitalization
                 ticker_cap = num_shares * ticker_price
 
-                # add entry to portfolio database
-                query_string = "insert into assets values('{}', {}, {}, {})".format(ticker, ticker_sentiment, ticker_price, num_shares)
-                c.execute(query_string)
-                conn.commit()
+                # add entry to portfolio database - this is a test
+                # query_string = "insert into assets values('{}', {}, {}, {})".format(ticker, ticker_sentiment, ticker_price, num_shares)
+                # c.execute(query_string)
+                # conn.commit()
                 
                 # subtract total amount from initial amount
                 starting_wealth -= ticker_cap
