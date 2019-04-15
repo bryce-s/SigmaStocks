@@ -1,6 +1,6 @@
 # Project Overview
 
-The final team project for REECS 486
+The final team project for EECS 486
 
 github url: https://github.com/bryce-s/final_project
 
