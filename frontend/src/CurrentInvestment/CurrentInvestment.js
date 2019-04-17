@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Statistic, Card, Icon } from 'antd'
 import { Col } from 'react-flexbox-grid'
+import candlestickModal from './candlestickModal.js'
 
 export default class CurrentInvestment extends Component {
 	constructor(props) {
@@ -57,11 +58,16 @@ export default class CurrentInvestment extends Component {
 		return movement.substring(1)
 	}
 
+	showCandlestick() {
+		alert("I tried");
+	}
+
 	render() {
 		return (
-			<Col xs style={{ marginBottom: '3%' }}>
+			<Col xs style={{ marginBottom: '3%', marginTop: '3%' }}>
 				<Card
 					style={{ backgroundColor: this.getCardBackgroundColour() }}
+					onClick={this.showCandlestick}
 				>
 					<Statistic
 						title={this.props.ticker}

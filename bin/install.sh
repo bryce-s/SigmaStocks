@@ -2,7 +2,6 @@
 set -e
 set -x
 source env/bin/activate
-cd server
 pip install -r requirements.txt
-cd ../frontend
+cd frontend
 npm install
