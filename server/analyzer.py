@@ -41,7 +41,7 @@ def update_portfolio():
     # initialization of the RSS fetcher instance
     fetchbryce = RssFetcher()
     info = TickerToInfo()
-    fetchbryce.fetch_from_feed(info, max_to_fetch=3)
+    fetchbryce.fetch_from_feed(info, max_to_fetch=500)
     
     num_invested = 0
 
