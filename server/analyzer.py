@@ -7,6 +7,7 @@ import sqlite3
 from iexfinance.stocks import Stock
 import datavide
 from datetime import date
+import rss_fetcher
 
 # starting values and global portfolio values
 starting_wealth = 1000000000
@@ -41,6 +42,11 @@ def initialize_portfolio():
     total_value = 0
     total_sentiment = 0
     num_invested = 0
+
+    # initialization of the RSS fetcher instance
+    fetchbryce = rss_fetcher.RssFetcher()
+    info = rss_fetcher.TickerToInfo()
+    fetchbryce.fetch_from_feed(info)
 	
     with open("../tickers.txt") as tickers:
         # go through each ticker in the s&p 500
@@ -51,8 +57,16 @@ def initialize_portfolio():
             # get current stock price
             ticker_price = Stock(ticker).get_price()
 
-            # here we will use the api tools to fetch the article headlines for the given ticker
+            # datavide headlines
             headlines = datavide.datavide_headlines(ticker)
+            
+            # RSS article headlines
+            try:
+                rss_headlines = info.get_titles_for_ticker(ticker)
+                print(type(rss_headlines))
+                exit(1)
+            except:
+                pass
 
             # calculate average sentiment score for the article headlines of the given ticker
             ticker_sentiment = 0
@@ -83,14 +97,14 @@ def initialize_portfolio():
 
     # update our overview table
     # current_day
-    current_day = date.today()
+    current_day = str(date.today())
     current_value = total_value
     current_sentiment = total_sentiment / num_invested
     open_value = current_value
     open_sentiment = current_sentiment
     value_change = 0
     sentiment_change = 0
-    overview_query = "insert into overview values({}, {}, {}, {}, {}, {}, {}, {})".format(current_day, current_value, current_sentiment, open_value, open_sentiment, value_change, sentiment_change, num_invested)
+    overview_query = "insert into overview values('{}', {}, {}, {}, {}, {}, {}, {})".format(current_day, current_value, current_sentiment, open_value, open_sentiment, value_change, sentiment_change, num_invested)
     c.execute(overview_query)
     conn.commit()
 

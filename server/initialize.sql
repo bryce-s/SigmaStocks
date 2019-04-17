@@ -1,5 +1,5 @@
 CREATE TABLE overview(
-	current_day DATE PRIMARY KEY,
+	current_day DATETIME PRIMARY KEY,
 	current_value FLOAT,
 	current_sentiment FLOAT,
 	open_value FLOAT,
