@@ -1,3 +1,4 @@
+import os
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from nltk import tokenize
 import decimal
@@ -7,7 +8,7 @@ import sqlite3
 from iexfinance.stocks import Stock
 import datavide
 from datetime import date
-import rss_fetcher
+from rss_fetcher import RssFetcher, TickerToInfo
 
 # starting values and global portfolio values
 starting_wealth = 1000000000
@@ -31,10 +32,108 @@ def get_average_sentiment(input_list):
 
 # function handles updating the portfolio by retrieving new articles, recalculating sentiment, and changing position
 def update_portfolio():
-    pass
+    abspath = os.path.abspath(__file__)
+    dname = os.path.dirname(abspath)
+    os.chdir(dname)
+    conn = sqlite3.connect("portfolio.db")
+    c = conn.cursor()
+
+    # initialization of the RSS fetcher instance
+    fetchbryce = RssFetcher()
+    info = TickerToInfo()
+    fetchbryce.fetch_from_feed(info, max_to_fetch=3)
+    
+    num_invested = 0
+
+    # go through each ticker in the s&p 500
+    # ticker, sentiment, price, shares
+    for row in c.execute("select * from assets"):
+        # old portfolio information
+        ticker = str(row[0])
+        old_sentiment = row[1]
+        old_price = row[2]
+        old_shares = row[3]
+
+        # get new information
+        # get current stock price
+        ticker_price = Stock(ticker).get_price()
+
+        # datavide headlines
+        headlines = datavide.datavide_headlines(ticker)
+            
+        # RSS article headlines
+        try:
+            rss_headlines = info.get_titles_for_ticker(ticker)
+            print(type(rss_headlines))
+            exit(1)
+        except:
+            pass
+
+        # calculate average sentiment score for the article headlines of the given ticker
+        new_sentiment = 0
+        new_sentiment = get_average_sentiment(headlines)
+        print(ticker + " " + str(new_sentiment))
+
+        # set number of shares
+        num_shares = 0
+
+        # capitalization
+        ticker_cap = 0
+
+        total_value = 0
+        total_sentiment = 0
+        # if ticker sentiment goes up by more than 0.01, buy more stock
+        if new_sentiment - old_sentiment > 0.01:
+            # set number of shares
+            num_shares = old_shares
+            num_shares += 5
+
+            # capitalization
+            ticker_cap = num_shares * ticker_price
+            total_value += ticker_cap
+            total_sentiment += new_sentiment
+            num_invested += 1
+        
+        # else if ticker sentiment falls by more than 0.01, sell t
+        elif new_sentiment - old_sentiment < -0.01:
+            # sell current chares
+            num_shares = 0
+
+        else:
+            if num_shares > 0:
+                # capitalization
+                ticker_cap = num_shares * ticker_price
+                total_value += ticker_cap
+                total_sentiment += new_sentiment
+                num_invested += 1                
+
+        # insert into the database, we will still put assets into the database we do not have positions in
+        query_string = "update assets set sentiment={}, price={}, shares={} where ticker='{}'".format(new_sentiment, ticker_price, num_shares, ticker)
+        c.execute(query_string)
+        conn.commit()
+
+    # update our overview table
+    # current_day
+    current_day = str(date.today())
+    current_value = total_value
+    current_sentiment = total_sentiment / num_invested
+    open_value = current_value
+    open_sentiment = current_sentiment
+    value_change = ticker_price - old_price
+    sentiment_change = new_sentiment - old_sentiment
+    overview_query = "insert into overview values('{}', {}, {}, {}, {}, {}, {}, {})".format(current_day, current_value, current_sentiment, open_value, open_sentiment, value_change, sentiment_change, num_invested)
+    c.execute(overview_query)
+    conn.commit()
+
+    print(total_value)
+    conn.close()
 
 # function handles the initialization of the portfolio
 def initialize_portfolio():
+    abspath = os.path.abspath(__file__)
+    dname = os.path.dirname(abspath)
+    os.chdir(dname)
+    
     conn = sqlite3.connect("portfolio.db")
     c = conn.cursor()
 
@@ -44,9 +143,9 @@ def initialize_portfolio():
     num_invested = 0
 
     # initialization of the RSS fetcher instance
-    fetchbryce = rss_fetcher.RssFetcher()
-    info = rss_fetcher.TickerToInfo()
-    fetchbryce.fetch_from_feed(info)
+    fetchbryce = RssFetcher()
+    info = TickerToInfo()
+    fetchbryce.fetch_from_feed(info, max_to_fetch=3)
 	
     with open("../tickers.txt") as tickers:
         # go through each ticker in the s&p 500
@@ -111,7 +210,10 @@ def initialize_portfolio():
     print(total_value)
     conn.close()
 
-initialize_portfolio()
 
-test = ["the movie was awesome", "the movie was great!!!!!", "the movie was pretty great and the popcorn was delicious.", "the plot was amazing!!", "the acting rocked. I can't believe the movie was that good"]
+
+# initialize_portfolio()
+update_portfolio()
+
+
 # get_average_sentiment(test)

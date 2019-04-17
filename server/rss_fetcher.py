@@ -33,6 +33,8 @@ class TitleInfo:
             resDicts.append(dict(item))
         return resDicts
 
+    
+
 
 class TickerToInfo:
     """cleanly maps ticker to ticker info, no dict abuse required"""
@@ -58,6 +60,7 @@ class RssFetcher:
     def __init__(self, input_company_list: str = "./target_news_sources.json"):
         assert isinstance(input_company_list, str)
         self.companies = str(input_company_list)
+        self.fetched_this_round = 0
 
     def __process_tickers(self, ti: Ticker, all_tickers: dict, article_title: str, target: dict, ticker_info: TickerToInfo):
         for ticker in all_tickers:
@@ -73,6 +76,7 @@ class RssFetcher:
             cname = ti.get_company_name(ticker)
             if " " + company_name in " " + article_title2.lower() or " " + ticker.lower() + " " in " " + article_title2.lower() + " ":
                 print("match: " + cname)
+                self.fetched_this_round += 1
                 titleDict = dict()
                 try:
                     titleDict['title'] = target['title']
@@ -84,8 +88,9 @@ class RssFetcher:
                 fs = frozenset(titleDict.items())
                 ticker_info.add_title(ticker.lower(), fs)
 
-    def fetch_from_feed(self, ticker_info: TickerToInfo):
+    def fetch_from_feed(self, ticker_info: TickerToInfo, max_to_fetch: int = 2000):
         check_type(ticker_info, TickerToInfo)
+        self.fetched_this_round = 0
         json_object = open(self.companies, "r")
         rss_targets = json.load(json_object)
         target_count = 0
@@ -106,6 +111,9 @@ class RssFetcher:
                     # o(n^2) (more or less)
                     self.__process_tickers(
                         ti, all_tickers, article_title, fi, ticker_info)
+                    if self.fetched_this_round > max_to_fetch:
+                        return # we exit early in case this parame
+            
 
 
 def main():
@@ -114,5 +122,5 @@ def main():
     info = TickerToInfo()
     fetchbryce.fetch_from_feed(info)
 
-
-main()
+if __name__ == "__main__":
+    main()
