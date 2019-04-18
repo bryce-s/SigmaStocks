@@ -4,6 +4,8 @@ from flask_cors import CORS
 from time import sleep
 import sys
 import threading
+import sqlite3
+from analyzer import update_portfolio
 
 
 app = Flask(__name__)
@@ -18,10 +20,22 @@ def index():
 
 
 
+def check_if_portfoilo_inited():
+    """return True if portfolio is initted"""
+    conn = sqlite3.connect("portfolio.db")
+    c = conn.cursor()
+    try:
+        c.execute("select * from assets").fetchall()
+    except:
+        print('ur portfolio bad')
+        # uhh this should kill app.py not thread
+        exit(1)
+
 
 def analyzer_run_wraper():
     with app.app_context():
          while True:
+            update_portfolio()            
             sleep(60*60) # we refetch every hour for now.
 
 
@@ -46,6 +60,7 @@ def analyzer_run_wraper():
 
 
 if __name__ == '__main__':
+    check_if_portfoilo_inited()
     thread = threading.Thread(target = analyzer_run_wraper)
     thread.run()
     # refresh_time = sys.argv[1]
