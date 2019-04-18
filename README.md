@@ -119,9 +119,9 @@ to communicate w. json here.
 ```
 
 
-## PreDICKter (nice)
+## Predictor
 
-'Probs' in same program as classifer. Use score accuracy to resolve sentiment.
+Probably in same program as classifer. Use score accuracy to resolve sentiment.
 Take in a fresh news source and one of our predetermined tickers, just return our prediction for the ticker.
 
 ```
