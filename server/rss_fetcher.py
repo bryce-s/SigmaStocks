@@ -51,7 +51,7 @@ class TickerToInfo:
             self.ticker_to_info[ticker].push_title(title)
 
     def get_titles_for_ticker(self, ticker: str):
-        return self.ticker_to_info[ticker].get_titles()
+        return self.ticker_to_info[ticker.lower()].get_titles()
 
 
 class RssFetcher:

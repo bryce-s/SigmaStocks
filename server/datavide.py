@@ -15,9 +15,12 @@ def datavide_headlines(ticker):
 
 	headlines = []
 	
-	for entry in data["data"]:
-		headlines.append(entry["headline"])
-	
+	try:
+		for entry in data["data"]:
+			headlines.append(entry["headline"])
+	except KeyError as e:
+		return list()
+
 	return(headlines)
 
 headlines = datavide_headlines("MMM")

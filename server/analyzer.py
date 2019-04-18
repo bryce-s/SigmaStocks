@@ -33,16 +33,13 @@ def get_average_sentiment(input_list):
 
 # function handles updating the portfolio by retrieving new articles, recalculating sentiment, and changing position
 def update_portfolio():
-    abspath = os.path.abspath(__file__)
-    dname = os.path.dirname(abspath)
-    os.chdir(dname)
     conn = sqlite3.connect("portfolio.db")
     c = conn.cursor()
 
     # initialization of the RSS fetcher instance
     fetchbryce = RssFetcher()
     info = TickerToInfo()
-    fetchbryce.fetch_from_feed(info, max_to_fetch=3)
+    fetchbryce.fetch_from_feed(info, max_to_fetch=500)
     
     total_value = 0
     total_sentiment = 0
@@ -70,7 +67,10 @@ def update_portfolio():
 
         # get new information
         # get current stock price
-        ticker_price = Stock(ticker).get_price()
+        try:
+            ticker_price = Stock(ticker).get_price()
+        except:
+            continue
 
         # datavide headlines
         headlines = datavide.datavide_headlines(ticker)
@@ -78,7 +78,9 @@ def update_portfolio():
         # RSS article headlines
         try:
             rss_headlines = info.get_titles_for_ticker(ticker)
-            # print(type(rss_headlines))
+            print(type(rss_headlines))
+            for ticker_obj in rss_headlines:
+                headlines.append(ticker_obj['title'])
             # exit(1)
         except:
             pass
@@ -146,9 +148,6 @@ def update_portfolio():
 
 # function handles the initialization of the portfolio
 def initialize_portfolio():
-    abspath = os.path.abspath(__file__)
-    dname = os.path.dirname(abspath)
-    os.chdir(dname)
     
     conn = sqlite3.connect("portfolio.db")
     c = conn.cursor()
@@ -161,7 +160,7 @@ def initialize_portfolio():
     # initialization of the RSS fetcher instance
     fetchbryce = RssFetcher()
     info = TickerToInfo()
-    fetchbryce.fetch_from_feed(info, max_to_fetch=3)
+    fetchbryce.fetch_from_feed(info, max_to_fetch=500)
 	
     with open("../tickers.txt") as tickers:
         # go through each ticker in the s&p 500
