@@ -9,9 +9,11 @@ from iexfinance.stocks import Stock
 import datavide
 from datetime import date
 from rss_fetcher import RssFetcher, TickerToInfo
+from prediction import predictData
 
 # starting values and global portfolio values
 starting_wealth = 1000000000
+
 
 # function handles taking headline and returning sentiment score
 def get_average_sentiment(input_list):
@@ -30,6 +32,7 @@ def get_average_sentiment(input_list):
     else:
         return(0)
 
+
 # function handles updating the portfolio by retrieving new articles, recalculating sentiment, and changing position
 def update_portfolio():
     abspath = os.path.abspath(__file__)
@@ -42,7 +45,7 @@ def update_portfolio():
     fetchbryce = RssFetcher()
     info = TickerToInfo()
     fetchbryce.fetch_from_feed(info, max_to_fetch=500)
-    
+
     num_invested = 0
 
     # go through each ticker in the s&p 500
@@ -60,7 +63,7 @@ def update_portfolio():
 
         # datavide headlines
         headlines = datavide.datavide_headlines(ticker)
-            
+
         # RSS article headlines
         try:
             rss_headlines = info.get_titles_for_ticker(ticker)
@@ -82,8 +85,12 @@ def update_portfolio():
 
         total_value = 0
         total_sentiment = 0
-        # if ticker sentiment goes up by more than 0.01, buy more stock
-        if new_sentiment - old_sentiment > 0.01:
+        # if ticker sentiment goes up by more than 0.01 and the 
+        # predicted difference > 0, buy more stock
+        # getting the predicted difference from prediction.py:
+        predictied_difference = predictData(ticker, 5)
+        # print("predicted difference: " + str(predictied_difference))
+        if new_sentiment - old_sentiment > 0.01 and predictied_difference > 0:
             # set number of shares
             num_shares = old_shares
             num_shares += 5
@@ -93,8 +100,8 @@ def update_portfolio():
             total_value += ticker_cap
             total_sentiment += new_sentiment
             num_invested += 1
-        
-        # else if ticker sentiment falls by more than 0.01, sell t
+
+        # else if ticker sentiment falls by more than 0.01, sell
         elif new_sentiment - old_sentiment < -0.01:
             # sell current chares
             num_shares = 0
@@ -128,12 +135,13 @@ def update_portfolio():
     print(total_value)
     conn.close()
 
+
 # function handles the initialization of the portfolio
 def initialize_portfolio():
     abspath = os.path.abspath(__file__)
     dname = os.path.dirname(abspath)
     os.chdir(dname)
-    
+
     conn = sqlite3.connect("portfolio.db")
     c = conn.cursor()
 
@@ -146,19 +154,19 @@ def initialize_portfolio():
     fetchbryce = RssFetcher()
     info = TickerToInfo()
     fetchbryce.fetch_from_feed(info, max_to_fetch=3)
-	
+
     with open("../tickers.txt") as tickers:
         # go through each ticker in the s&p 500
         for ticker in tickers:
             # parse endlines from tickers
             ticker = ticker.strip()
-            
+
             # get current stock price
             ticker_price = Stock(ticker).get_price()
 
             # datavide headlines
             headlines = datavide.datavide_headlines(ticker)
-            
+
             # RSS article headlines
             try:
                 rss_headlines = info.get_titles_for_ticker(ticker)

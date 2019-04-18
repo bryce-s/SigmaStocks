@@ -6,16 +6,19 @@ from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from iexfinance.stocks import get_historical_data
 
+
 def getStocks(stockList):
     for stock in stockList:
         predictData(stock, 5)
 
+
 def getMovement(prediction, close):
     l = len(prediction)
-    # for i in l: 
-        # print(prediction[i] - close)
+    # for i in l:
+    #    print(prediction[i] - close)
     # print(close)
     # print(prediction)
+
 
 def predictData(stock, numForecast):
     start = datetime(2017, 1, 1)
@@ -36,16 +39,21 @@ def predictData(stock, numForecast):
     X_prediction = X[-numForecast:]
     X_train, X_test, Y_train, Y_test = train_test_split(
         X, Y, test_size=0.5)
-        
+
     clf = LinearRegression()
     clf.fit(X_train, Y_train)
     prediction = (clf.predict(X_prediction))
 
-    print(stock)
-    print(prediction)
+    # print("prediction[0] " + str(prediction[0]))
+    # print("df close 1: " + str(df['close'][1]))
+
+    return prediction[0] - df['close'][1]
+
+    # print(stock)
+    # print(prediction)
     # print(getMovement(prediction, df.tail(1)['close']))
 
-    print('-----------------------------------------------------------------------')
+    # print('-----------------------------------------------------------------------')
 
 if __name__ == '__main__':
     getStocks(['GOOG'])
