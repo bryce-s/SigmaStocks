@@ -36,6 +36,7 @@ def check_if_portfoilo_inited():
 def analyzer_run_wraper():
     with app.app_context():
          while True:
+            print("New Round -------------------------------------------")
             update_portfolio()            
             sleep(60*60*2) # we refetch every two hours for now.
 
