@@ -24,8 +24,11 @@ def predictData(stock, numForecast):
     if os.path.exists('../Data/StockData'):
         csv_name = ('../Data/StockData/' + stock + '_Prices.csv')
     else:
+        if not os.path.exists("../Data/"):
+            os.mkdir("../Data/")
         os.mkdir("../Data/StockData")
         csv_name = ('../Data/StockData/' + stock + '_Prices.csv')
+
     df.to_csv(csv_name)
     df['prediction'] = df['close'].shift(-1)
     df.dropna(inplace=True)
