@@ -1,4 +1,5 @@
 from urllib.request import urlopen
+import json
 
 
 class Ticker:
@@ -48,9 +49,8 @@ class Ticker:
                 continue
         return ticker_dict
 
-# if __name__ == "__main__":
-#     g = Ticker()
-#     print(g.ticker_dict)
-#     print(g.get_ticker('Alphabet'))
-#     print(g.get_company_name('AAPL'))
-#     # print(get_tickers())
+if __name__ == "__main__":
+    g = Ticker()
+    print(json.dumps(g.ticker_dict , indent=4, sort_keys=True))
+    # print(g.get_ticker('Alphabet'))
+    # print(g.get_company_name('AAPL'))

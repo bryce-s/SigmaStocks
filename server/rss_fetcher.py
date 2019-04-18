@@ -108,6 +108,7 @@ class RssFetcher:
                     date = fi['published']
                     ti = Ticker()
                     all_tickers = ti.ticker_dict
+                    print(all_tickers)
                     # o(n^2) (more or less)
                     self.__process_tickers(
                         ti, all_tickers, article_title, fi, ticker_info)
