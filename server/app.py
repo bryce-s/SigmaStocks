@@ -1,6 +1,7 @@
 #!flask/bin/python
 from flask import Flask, jsonify
 from flask_cors import CORS
+import os 
 from time import sleep
 import sys
 import threading
@@ -22,7 +23,7 @@ def index():
 
 def check_if_portfoilo_inited():
     """return True if portfolio is initted"""
-    conn = sqlite3.connect("portfolio.db")
+    conn = sqlite3.connect("server/portfolio.db")
     c = conn.cursor()
     try:
         c.execute("select * from assets").fetchall()
@@ -60,7 +61,14 @@ def analyzer_run_wraper():
 
 
 @app.before_first_request
-def init_analysis():
+def init_analysis():    
+    FINAL_PROJECT_DIR = os.environ.get("FINAL_PROJECT_DIR", default=False)
+    if (FINAL_PROJECT_DIR == False):
+        print("error: please set FINAL_PROJECT_DIR env variable..")
+        # cd project_root
+        # echo "export FINAL_PROJECT_DIR='$(pwd)'" >> ~/.zshrc
+        exit(1)
+    os.chdir(FINAL_PROJECT_DIR)
     check_if_portfoilo_inited()
     thread = threading.Thread(target = analyzer_run_wraper)
     thread.start()
@@ -68,5 +76,6 @@ def init_analysis():
     # refresh_time = sys.argv[1]
 
 if __name__ == '__main__':
+
     app.run()
 

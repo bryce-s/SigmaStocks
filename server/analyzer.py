@@ -33,7 +33,7 @@ def get_average_sentiment(input_list):
 
 # function handles updating the portfolio by retrieving new articles, recalculating sentiment, and changing position
 def update_portfolio():
-    conn = sqlite3.connect("portfolio.db")
+    conn = sqlite3.connect("server/portfolio.db")
     c = conn.cursor()
 
     # initialization of the RSS fetcher instance
@@ -149,7 +149,7 @@ def update_portfolio():
 # function handles the initialization of the portfolio
 def initialize_portfolio():
     
-    conn = sqlite3.connect("portfolio.db")
+    conn = sqlite3.connect("server/portfolio.db")
     c = conn.cursor()
 
     global starting_wealth
@@ -162,7 +162,7 @@ def initialize_portfolio():
     info = TickerToInfo()
     fetchbryce.fetch_from_feed(info, max_to_fetch=500)
 	
-    with open("../tickers.txt") as tickers:
+    with open("./tickers.txt") as tickers:
         # go through each ticker in the s&p 500
         for ticker in tickers:
             # parse endlines from tickers
