@@ -9,6 +9,7 @@ from iexfinance.stocks import Stock
 import datavide
 from datetime import date
 from rss_fetcher import RssFetcher, TickerToInfo
+from prediction import predictData
 
 # starting values and global portfolio values
 starting_wealth = 1000000000
@@ -82,8 +83,11 @@ def update_portfolio():
 
         total_value = 0
         total_sentiment = 0
-        # if ticker sentiment goes up by more than 0.01, buy more stock
-        if new_sentiment - old_sentiment > 0.01:
+        predicted_difference = predictData(ticker, 5)
+        # print("predicted difference: " + str(predicted_difference))
+        # print("sentiment difference: " + str(new_sentiment - old_sentiment))
+        # if ticker sentiment goes up by more than 0.01 and predicted_difference > 0, buy more stock
+        if (new_sentiment - old_sentiment > 0.01) and (predicted_difference > 0):
             # set number of shares
             num_shares = old_shares
             num_shares += 5

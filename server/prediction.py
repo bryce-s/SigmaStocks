@@ -41,11 +41,13 @@ def predictData(stock, numForecast):
     clf.fit(X_train, Y_train)
     prediction = (clf.predict(X_prediction))
 
-    print(stock)
-    print(prediction)
+    return prediction[0] - df['close'][1]
+
+    # print(stock)
+    # print(prediction)
     # print(getMovement(prediction, df.tail(1)['close']))
 
-    print('-----------------------------------------------------------------------')
+    # print('-----------------------------------------------------------------------')
 
 if __name__ == '__main__':
     getStocks(['GOOG'])
