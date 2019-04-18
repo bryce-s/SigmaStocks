@@ -9,6 +9,7 @@ from iexfinance.stocks import Stock
 import datavide
 from datetime import datetime
 from rss_fetcher import RssFetcher, TickerToInfo
+from prediction import predictData
 
 # starting values and global portfolio values
 starting_wealth = 1000000000
