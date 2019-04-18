@@ -96,9 +96,9 @@ def update_portfolio():
         # capitalization
         ticker_cap = 0
     
-        prediction_difference = predictData(ticker, 5)
+        # prediction_difference = predictData(ticker, 5)
         # if ticker sentiment goes up by more than 0.05, buy more stock
-        if new_sentiment - old_sentiment > 0.05 and prediction_difference > 0:
+        if new_sentiment - old_sentiment > 0.05:
             # set number of shares
             new_shares = old_shares
             new_shares += 5
