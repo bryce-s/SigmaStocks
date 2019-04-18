@@ -7,7 +7,7 @@ import json
 import sqlite3
 from iexfinance.stocks import Stock
 import datavide
-from datetime import date
+from datetime import datetime
 from rss_fetcher import RssFetcher, TickerToInfo
 
 # starting values and global portfolio values
@@ -41,13 +41,26 @@ def update_portfolio():
     # initialization of the RSS fetcher instance
     fetchbryce = RssFetcher()
     info = TickerToInfo()
-    fetchbryce.fetch_from_feed(info, max_to_fetch=500)
+    fetchbryce.fetch_from_feed(info, max_to_fetch=3)
     
+    total_value = 0
+    total_sentiment = 0
     num_invested = 0
 
+    # get the opening value of the portfolio
+    close_query = "select close from history order by day desc"
+    last_value = c.execute(close_query).fetchone()
+    last_value = last_value[0]
+    
+    # get the opening sentiment of the portfolio
+    sent_query = "select close_sentiment from history order by day desc"
+    last_sent = c.execute(sent_query).fetchone()
+    last_sent = last_sent[0]
+    
     # go through each ticker in the s&p 500
     # ticker, sentiment, price, shares
-    for row in c.execute("select * from assets"):
+    #print(len(c.execute("select * from assets")))
+    for row in c.execute("select * from assets").fetchall():
         # old portfolio information
         ticker = str(row[0])
         old_sentiment = row[1]
@@ -64,8 +77,8 @@ def update_portfolio():
         # RSS article headlines
         try:
             rss_headlines = info.get_titles_for_ticker(ticker)
-            print(type(rss_headlines))
-            exit(1)
+            # print(type(rss_headlines))
+            # exit(1)
         except:
             pass
 
@@ -75,54 +88,55 @@ def update_portfolio():
         print(ticker + " " + str(new_sentiment))
 
         # set number of shares
-        num_shares = 0
+        new_shares = 0
 
         # capitalization
         ticker_cap = 0
 
-        total_value = 0
-        total_sentiment = 0
         # if ticker sentiment goes up by more than 0.01, buy more stock
-        if new_sentiment - old_sentiment > 0.01:
+        if new_sentiment - old_sentiment > 0.05:
             # set number of shares
-            num_shares = old_shares
-            num_shares += 5
-
+            new_shares = old_shares
+            new_shares += 5
+            print("good news")
             # capitalization
-            ticker_cap = num_shares * ticker_price
+            ticker_cap = new_shares * ticker_price
             total_value += ticker_cap
             total_sentiment += new_sentiment
             num_invested += 1
         
         # else if ticker sentiment falls by more than 0.01, sell t
-        elif new_sentiment - old_sentiment < -0.01:
+        elif new_sentiment - old_sentiment < -0.05:
             # sell current chares
             num_shares = 0
+            print("bad news")
 
+        # sentiment didn't change, keep position the same
         else:
-            if num_shares > 0:
+            if old_shares > 0:
                 # capitalization
-                ticker_cap = num_shares * ticker_price
+                print("no news")
+                new_shares = old_shares
+                ticker_cap = new_shares * ticker_price
                 total_value += ticker_cap
                 total_sentiment += new_sentiment
                 num_invested += 1                
 
         # insert into the database, we will still put assets into the database we do not have positions in
-        query_string = "update assets set sentiment={}, price={}, shares={} where ticker='{}'".format(new_sentiment, ticker_price, num_shares, ticker)
+        query_string = "update assets set sentiment={}, price={}, shares={} where ticker='{}'".format(new_sentiment, ticker_price, new_shares, ticker)
         c.execute(query_string)
         conn.commit()
 
     # update our overview table
-    # current_day
-    current_day = str(date.today())
+    current_time = str(datetime.today())
     current_value = total_value
     current_sentiment = total_sentiment / num_invested
     open_value = current_value
     open_sentiment = current_sentiment
     value_change = ticker_price - old_price
     sentiment_change = new_sentiment - old_sentiment
-    overview_query = "insert into overview values('{}', {}, {}, {}, {}, {}, {}, {})".format(current_day, current_value, current_sentiment, open_value, open_sentiment, value_change, sentiment_change, num_invested)
-    c.execute(overview_query)
+    history_query = "insert into history values('{}', {}, {}, {}, {}, {}, {}, {})".format(current_time, last_value, current_value, last_sent, current_sentiment, value_change, sentiment_change, num_invested)
+    c.execute(history_query)
     conn.commit()
 
     print(total_value)
@@ -162,8 +176,8 @@ def initialize_portfolio():
             # RSS article headlines
             try:
                 rss_headlines = info.get_titles_for_ticker(ticker)
-                print(type(rss_headlines))
-                exit(1)
+                # print(type(rss_headlines))
+                # exit(1)
             except:
                 pass
 
@@ -195,16 +209,17 @@ def initialize_portfolio():
             conn.commit()
 
     # update our overview table
-    # current_day
-    current_day = str(date.today())
+    current_time = str(datetime.today())
     current_value = total_value
     current_sentiment = total_sentiment / num_invested
     open_value = current_value
     open_sentiment = current_sentiment
     value_change = 0
     sentiment_change = 0
-    overview_query = "insert into overview values('{}', {}, {}, {}, {}, {}, {}, {})".format(current_day, current_value, current_sentiment, open_value, open_sentiment, value_change, sentiment_change, num_invested)
-    c.execute(overview_query)
+    
+    # this will set up the history table
+    history_query = "insert into history values('{}', {}, {}, {}, {}, {}, {}, {})".format(current_time, current_value, current_value, current_sentiment, current_sentiment, 0, 0, num_invested)
+    c.execute(history_query)
     conn.commit()
 
     print(total_value)
@@ -216,4 +231,3 @@ def initialize_portfolio():
 update_portfolio()
 
 
-# get_average_sentiment(test)
