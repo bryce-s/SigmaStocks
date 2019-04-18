@@ -106,8 +106,7 @@ class RssFetcher:
                 if 'published' in fi and 'title' in fi:
                     article_title = fi['title']
                     date = fi['published']
-                    ti = Ticker()
-                    all_tickers = ti.ticker_dict
+                    all_tickers = json.load(open("./tickers.json").read())
                     print(all_tickers)
                     # o(n^2) (more or less)
                     self.__process_tickers(
