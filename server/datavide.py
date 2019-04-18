@@ -22,6 +22,3 @@ def datavide_headlines(ticker):
 		return list()
 
 	return(headlines)
-
-headlines = datavide_headlines("MMM")
-print(headlines)

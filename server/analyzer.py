@@ -227,8 +227,8 @@ def initialize_portfolio():
     conn.close()
 
 
-if __name__ == "__main__":
-   # update_portfolio()
-    initialize_portfolio()
+# if __name__ == "__main__":
+#    # update_portfolio()
+#     initialize_portfolio()
 
 

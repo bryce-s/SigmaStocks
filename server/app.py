@@ -36,7 +36,7 @@ def analyzer_run_wraper():
     with app.app_context():
          while True:
             update_portfolio()            
-            sleep(60*60) # we refetch every hour for now.
+            sleep(60*60*2) # we refetch every two hours for now.
 
 
 
@@ -59,9 +59,14 @@ def analyzer_run_wraper():
 #     return jsonify(stocks)
 
 
-if __name__ == '__main__':
+@app.before_first_request
+def init_analysis():
     check_if_portfoilo_inited()
     thread = threading.Thread(target = analyzer_run_wraper)
-    thread.run()
+    thread.start()
+    print('portfolio thread runnning!')
     # refresh_time = sys.argv[1]
-    app.run(port=8080, debug=True)
+
+if __name__ == '__main__':
+    app.run()
+
