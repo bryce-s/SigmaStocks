@@ -8,7 +8,7 @@ from iexfinance.stocks import get_historical_data
 
 def getStocks(stockList, date=datetime.now()):
     for stock in stockList:
-        predictData(stock, 5, date)
+        print(predictData(stock, 1, date))
 
 def predictData(stock, numForecast, date):
     start = date - timedelta(weeks=8)
