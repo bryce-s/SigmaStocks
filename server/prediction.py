@@ -6,13 +6,13 @@ from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from iexfinance.stocks import get_historical_data
 
-def getStocks(stockList):
+def getStocks(stockList, date=datetime.now()):
     for stock in stockList:
-        predictData(stock, 5)
+        predictData(stock, 5, date)
 
-def predictData(stock, numForecast):
-    start = datetime.now() - timedelta(weeks=8)
-    end = datetime.now()
+def predictData(stock, numForecast, date):
+    start = date - timedelta(weeks=8)
+    end = date
     df = get_historical_data(stock, start=start, end=end, output_format='pandas')
     if os.path.exists('../Data/StockData'):
         csv_name = ('../Data/StockData/' + stock + '_Prices.csv')
