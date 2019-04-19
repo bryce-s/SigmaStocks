@@ -8,9 +8,9 @@ from iexfinance.stocks import get_historical_data
 
 def getStocks(stockList, date=datetime.now()):
     for stock in stockList:
-        print(predictData(stock, 1, date))
+        predictData(stock, 5, date)
 
-def predictData(stock, numForecast, date):
+def predictData(stock, numForecast=1, date=datetime.now()):
     start = date - timedelta(weeks=8)
     end = date
     df = get_historical_data(stock, start=start, end=end, output_format='pandas')
@@ -37,7 +37,7 @@ def predictData(stock, numForecast, date):
     clf.fit(X_train, Y_train)
     prediction = (clf.predict(X_prediction))
 
-    return prediction[0] - df['close'][1]
+    return (prediction[0] - df['close'][1]) / df['close'][1]
 
     # print(stock)
     # print(prediction)
