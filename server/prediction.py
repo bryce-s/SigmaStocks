@@ -1,5 +1,5 @@
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from sklearn.linear_model import LinearRegression
 from sklearn import preprocessing
@@ -10,15 +10,8 @@ def getStocks(stockList):
     for stock in stockList:
         predictData(stock, 5)
 
-def getMovement(prediction, close):
-    l = len(prediction)
-    # for i in l: 
-        # print(prediction[i] - close)
-    # print(close)
-    # print(prediction)
-
 def predictData(stock, numForecast):
-    start = datetime(2017, 1, 1)
+    start = datetime.now() - timedelta(weeks=8)
     end = datetime.now()
     df = get_historical_data(stock, start=start, end=end, output_format='pandas')
     if os.path.exists('../Data/StockData'):
