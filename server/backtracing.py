@@ -5,7 +5,11 @@ import datetime
 from stock import Stock_Obj
 
 
+prevDayStocks = []
+
+
 def analyse(currentDayValues, currentDate):
+    global prevDayStocks
     results = {}
     for stock in currentDayValues.keys():
         try:
@@ -14,15 +18,17 @@ def analyse(currentDayValues, currentDate):
             day = int(currentDate[6:8])
             date = datetime.datetime(year=year, month=month, day=day)
             pred = predictData(stock, 1, date)
-            sentiment = get_average_sentiment(currentDayValues[stock])
-            val = sentiment * pred
+            # sentiment = get_average_sentiment(currentDayValues[stock])
+            val = pred
             if val > 0:
-                results[stock] = val
+                if stock not in prevDayStocks:
+                    results[stock] = val
         except:
             pass
     results_sorted = list(
         {k: v for k, v in sorted(results.items(), key=lambda x: x[1])})
     top3 = results_sorted[:3]
+    prevDayStocks = top3
     return top3
 
 
@@ -53,8 +59,10 @@ if __name__ == "__main__":
                     for s in res:
                         obj = Stock_Obj(s)
                         historical = obj.getHistoricalPrice(currentDate)
-                        diff = float(historical['close']) - float(historical['open'])
-                        print(s, round(diff, 2), balance * 0.1, ((balance * 0.1)*diff),  ' ')
+                        diff = float(historical['close']) - \
+                            float(historical['open'])
+                        print(s, round(diff, 2), balance * 0.1,
+                              ((balance * 0.1)*diff),  ' ')
                         dayIncome += ((balance * 0.1)*diff)
                     growth = dayIncome / balance
                     balance += dayIncome
