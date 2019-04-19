@@ -8,7 +8,27 @@ from stock import Stock_Obj
 prevDayStocks = []
 
 
-def analyse(currentDayValues, currentDate):
+def getNumInvest(balance):
+    if balance < 5000:
+        return 3
+    if balance < 10000:
+        return 4
+    if balance < 20000:
+        return 5
+    return 6
+
+
+def getInvestmentAmount(balance):
+    if balance < 5000:
+        return 350
+    if balance < 10000:
+        return 1000
+    if balance < 20000:
+        return 2500
+    return 3000
+
+
+def analyse(currentDayValues, currentDate, numInvest):
     global prevDayStocks
     results = {}
     for stock in currentDayValues.keys():
@@ -18,8 +38,8 @@ def analyse(currentDayValues, currentDate):
             day = int(currentDate[6:8])
             date = datetime.datetime(year=year, month=month, day=day)
             pred = predictData(stock, 1, date)
-            # sentiment = get_average_sentiment(currentDayValues[stock])
-            val = pred
+            sentiment = get_average_sentiment(currentDayValues[stock])
+            val = pred * sentiment
             if val > 0:
                 if stock not in prevDayStocks:
                     results[stock] = val
@@ -27,17 +47,19 @@ def analyse(currentDayValues, currentDate):
             pass
     results_sorted = list(
         {k: v for k, v in sorted(results.items(), key=lambda x: x[1])})
-    top3 = results_sorted[:3]
-    prevDayStocks = top3
-    return top3
+    if numInvest > len(results_sorted):
+        numInvest = len(results_sorted)
+    topNumInvest = results_sorted[:numInvest]
+    prevDayStocks = topNumInvest
+    return topNumInvest
 
 
 if __name__ == "__main__":
 
     balance = 1000
 
-    history = open('./data/history.csv', 'w')
-    reader = csv.DictReader(open('./data/sorted_news.csv'))
+    history = open('../data/history.csv', 'w')
+    reader = csv.DictReader(open('../data/sorted_news.csv'))
     next(reader)
     currentDayValues = {}
     currentDate = None
@@ -54,17 +76,18 @@ if __name__ == "__main__":
                     currentDayValues[ticker] = [row['headline']]
             else:
                 try:
-                    res = analyse(currentDayValues, currentDate)
+                    res = analyse(currentDayValues, currentDate,
+                                  getNumInvest(balance))
                     dayIncome = 0
                     for s in res:
                         obj = Stock_Obj(s)
                         historical = obj.getHistoricalPrice(currentDate)
                         diff = float(historical['close']) - \
                             float(historical['open'])
-                        print(s, round(diff, 2), balance * 0.1,
-                              ((balance * 0.1)*diff),  ' ')
-                        dayIncome += ((balance * 0.1)*diff)
-                    growth = dayIncome / balance
+                        print(s, round(diff, 2), getInvestmentAmount(balance),
+                              ((getInvestmentAmount(balance))*diff),  ' ')
+                        dayIncome += ((getInvestmentAmount(balance))*diff)
+                    growth = dayIncome / getInvestmentAmount(balance)
                     balance += dayIncome
                     out = currentDate + ', ' + \
                         str(res) + ', ' + str(balance) + \
