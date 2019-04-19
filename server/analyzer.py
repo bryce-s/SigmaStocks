@@ -32,8 +32,7 @@ def get_average_sentiment(input_list):
         return(0)
 
 # function handles updating the portfolio by retrieving new articles, recalculating sentiment, and changing position
-def update_portfolio():
-    conn = sqlite3.connect("server/portfolio.db")
+def update_portfolio(conn):
     c = conn.cursor()
 
     # initialization of the RSS fetcher instance
@@ -144,7 +143,7 @@ def update_portfolio():
     conn.commit()
 
     print(total_value)
-    conn.close()
+    # conn.close()
 
 # function handles the initialization of the portfolio
 def initialize_portfolio():

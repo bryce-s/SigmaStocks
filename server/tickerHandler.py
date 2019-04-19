@@ -4,7 +4,9 @@ import json
 
 class Ticker:
     def __init__(self, exchangeList=["NASDAQ", "NYSE", "AMEX"], debug=False):
-        self.ticker_dict = self.create_ticker_dict(exchangeList, debug)
+        # self.ticker_dict = self.create_ticker_dict(exchangeList, debug)
+        self.ticker_dict = None
+        
 
     # Input: Company name (str)
     # Output: Ticker (str)

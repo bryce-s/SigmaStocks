@@ -36,8 +36,8 @@ if __name__ == "__main__":
 
     balance = 1000
 
-    history = open('../data/history.csv', 'w')
-    reader = csv.DictReader(open('../data/sorted_news.csv'))
+    history = open('./data/history.csv', 'w')
+    reader = csv.DictReader(open('./data/sorted_news.csv'))
     next(reader)
     currentDayValues = {}
     currentDate = None

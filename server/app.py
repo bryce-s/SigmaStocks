@@ -35,9 +35,10 @@ def check_if_portfoilo_inited():
 
 def analyzer_run_wraper():
     with app.app_context():
+         conn = sqlite3.connect("server/portfolio.db")
          while True:
             print("New Round -------------------------------------------")
-            update_portfolio()            
+            update_portfolio(conn)            
             sleep(60*60*2) # we refetch every two hours for now.
 
 
