@@ -25,8 +25,8 @@ def get_average_sentiment(input_list):
         score = intensity["compound"]
         total += score
 
-    if size != 0:
-        average = round(total / size, 8)
+    if size > 0:
+        average = total / size
         return(average)
     else:
         return(0)

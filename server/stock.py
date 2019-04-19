@@ -30,6 +30,13 @@ class Stock_Obj:
         return round((historical_data[str(
             end.date())]['open'] - historical_data[str(date.date())]['open']), 4)
 
+    def getHistoricalPrice(self, date):
+        s = str(date[0:4]) + '-' + str(date[4:6]) + '-' + str(date[6:8])
+        val = get_historical_data(self.ticker, start=date, end=date)
+        for key in val.keys():
+            return val[key]
+        
+
 
 # if __name__ == '__main__':
     # t = Stock_Obj('AAPL')

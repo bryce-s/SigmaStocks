@@ -10,7 +10,7 @@ def getStocks(stockList, date=datetime.now()):
     for stock in stockList:
         predictData(stock, 5, date)
 
-def predictData(stock, numForecast=1, date=datetime.now()):
+def predictData(stock, numForecast=5, date=datetime.now()):
     start = date - timedelta(weeks=8)
     end = date
     df = get_historical_data(stock, start=start, end=end, output_format='pandas')
