@@ -33,8 +33,6 @@ class TitleInfo:
             resDicts.append(dict(item))
         return resDicts
 
-    
-
 
 class TickerToInfo:
     """cleanly maps ticker to ticker info, no dict abuse required"""
@@ -114,8 +112,7 @@ class RssFetcher:
                     self.__process_tickers(
                         ti, all_tickers, article_title, fi, ticker_info)
                     if self.fetched_this_round > max_to_fetch:
-                        return # we exit early in case this parame
-            
+                        return  # we exit early in case this parame
 
 
 def main():
@@ -123,6 +120,7 @@ def main():
     fetchbryce = RssFetcher()
     info = TickerToInfo()
     fetchbryce.fetch_from_feed(info)
+
 
 if __name__ == "__main__":
     main()

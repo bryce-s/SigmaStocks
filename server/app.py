@@ -1,7 +1,7 @@
 #!flask/bin/python
 from flask import Flask, jsonify
 from flask_cors import CORS
-import os 
+import os
 from time import sleep
 import sys
 import threading
@@ -14,11 +14,9 @@ app = Flask(__name__)
 CORS(app)
 
 
-
 @app.route('/')
 def index():
     return "Hello, World!"
-
 
 
 def check_if_portfoilo_inited():
@@ -35,15 +33,12 @@ def check_if_portfoilo_inited():
 
 def analyzer_run_wraper():
     with app.app_context():
-         conn = sqlite3.connect("server/portfolio.db")
-         while True:
+        conn = sqlite3.connect("server/portfolio.db")
+        while True:
             print("New Round -------------------------------------------")
-            update_portfolio(conn)            
-            sleep(60*60*2) # we refetch every two hours for now.
+            update_portfolio(conn)
+            sleep(60*60*2)  # we refetch every two hours for now.
 
-
-
-            
 
 # @app.route('/api/portfolio', methods=['GET'])
 # def portfolio():
@@ -63,7 +58,7 @@ def analyzer_run_wraper():
 
 
 @app.before_first_request
-def init_analysis():    
+def init_analysis():
     FINAL_PROJECT_DIR = os.environ.get("FINAL_PROJECT_DIR", default=False)
     if (FINAL_PROJECT_DIR == False):
         print("error: please set FINAL_PROJECT_DIR env variable..")
@@ -72,12 +67,12 @@ def init_analysis():
         exit(1)
     os.chdir(FINAL_PROJECT_DIR)
     check_if_portfoilo_inited()
-    thread = threading.Thread(target = analyzer_run_wraper)
+    thread = threading.Thread(target=analyzer_run_wraper)
     thread.start()
     print('portfolio thread runnning!')
     # refresh_time = sys.argv[1]
 
+
 if __name__ == '__main__':
 
     app.run()
-

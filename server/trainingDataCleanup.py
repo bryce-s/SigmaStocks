@@ -16,7 +16,7 @@ for row in reader:
     try:
         price = s.get_delta_calculation(date)
         writer.writerow([row['ticker'], row['company'],
-                     row['date'], price, row['headline']])
+                         row['date'], price, row['headline']])
     except:
         pass
 

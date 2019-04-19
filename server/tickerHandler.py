@@ -6,7 +6,6 @@ class Ticker:
     def __init__(self, exchangeList=["NASDAQ", "NYSE", "AMEX"], debug=False):
         # self.ticker_dict = self.create_ticker_dict(exchangeList, debug)
         self.ticker_dict = None
-        
 
     # Input: Company name (str)
     # Output: Ticker (str)
@@ -51,8 +50,9 @@ class Ticker:
                 continue
         return ticker_dict
 
+
 if __name__ == "__main__":
     g = Ticker()
-    print(json.dumps(g.ticker_dict , indent=4, sort_keys=True))
+    print(json.dumps(g.ticker_dict, indent=4, sort_keys=True))
     # print(g.get_ticker('Alphabet'))
     # print(g.get_company_name('AAPL'))

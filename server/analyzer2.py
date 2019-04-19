@@ -47,6 +47,8 @@ def vocab(headlines):
 
 # function that takes in a list of headlines and returns the vectorized form of each one in a list.
 # this essentially gets tf(w, d) for each headline.
+
+
 def vectorize(headlines):
     global V
     vectors = list()
@@ -67,6 +69,8 @@ def vectorize(headlines):
 # Now we calculate the idf(w, D) values and multiply them by the values in the one-hot vectors.
 # idf(w, D) = log( (1 + |D|) / df(d, w) )
 # df(d, w) = how many documents the word appears in
+
+
 def normalize(vectors):
     global D
     for vector in vectors:

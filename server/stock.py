@@ -35,7 +35,6 @@ class Stock_Obj:
         val = get_historical_data(self.ticker, start=date, end=date)
         for key in val.keys():
             return val[key]
-        
 
 
 # if __name__ == '__main__':
