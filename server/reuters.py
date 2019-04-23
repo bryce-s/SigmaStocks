@@ -4,151 +4,94 @@ Crawl news headlines from Reuters and save as csv.
 Input file: ./input/tickerList.csv
 News append to: ./input/news_reuters.csv
 """
+import datetime
+import inspect
 import os
 import sys
 import time
-import datetime
-import inspect
-import numpy as np
 from urllib.request import urlopen
+
+import numpy as np
 from bs4 import BeautifulSoup
 
 # credit: https://stackoverflow.com/a/11158224/4246348
 
-currentdir = os.path.dirname(os.path.abspath(
+currentDirectory = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir)
+parentDirectory = os.path.dirname(currentDirectory)
+sys.path.insert(0, parentDirectory)
 
 
-class ReutersCrawler(object):
+class ReutersCrawler:
 
     def __init__(self):
-        self.ticker_list_filename = '../data/tickerList.csv'
-        self.finished_reuters_filename = '../data/finished.reuters'
-        self.failed_reuters_filename = '../data/news_failed_tickers.csv'
-        self.news_filename = '../data/news_reuters.csv'
+        self.tickerFile = '../data/tickerList.csv'
+        self.newsFile = '../data/news_reuters.csv'
 
-    def load_finished_tickers(self):
-        # when we restart a task, we may call calc_finished_ticker() in crawler/yahoo_finance.py
-        # so that we can load the already finished reuters if any
-        return set(self._load_from_file(self.finished_reuters_filename))
-
-    def load_failed_tickers(self):
-        failed_tickers = {}  # {ticker: priority}
-        for line in self._load_from_file(self.failed_reuters_filename):
-            ticker, _, priority = line.split(',')
-            failed_tickers[ticker] = priority
-        return failed_tickers
-
-    def _load_from_file(self, filename):
-        if os.path.exists(filename):
-            with open(filename, 'r') as f:
-                for line in f:
-                    yield line.strip()
-
-    def fetch_content(self, task, date_range):
-        # https://uk.reuters.com/info/disclaimer
+    # Fetching news
+    def fetchContent(self, task, date_range):
         ticker, name, exchange = task
         print("%s - %s - %s" % (ticker, name, exchange))
 
         suffix = {'AMEX': '.A', 'NASDAQ': '.O', 'NYSE': '.N'}
-        # e.g.
-        # https://www.reuters.com/finance/stocks/company-news/BIDU.O?date=09262017
         url = "https://www.reuters.com/finance/stocks/company-news/" + \
-            ticker + suffix[exchange]
+              ticker + suffix[exchange]
 
-        ticker_failed = open(self.failed_reuters_filename, 'a+')
-        today = datetime.datetime.today().strftime("%Y%m%d")
-
-        news_num = self.get_news_num_whenever(url)
-        if news_num:
-            # this company has news, then fetch for N consecutive days in the
-            # past
-            has_content, no_news_days = self.fetch_within_date_range(
-                news_num, url, date_range, task, ticker)
-            if not has_content:
+        numNews = self.getNews(url)
+        if numNews:
+            retreievedNews, numNoNews = self.fetchWithinRange(
+                numNews, url, date_range, task, ticker)
+            if not retreievedNews:
                 print('%s has no content within date range' % ticker)
-            if no_news_days:
-                print('set as LOW priority')
-                for timestamp in no_news_days:
-                    ticker_failed.write(
-                        ticker + ',' + timestamp + ',' + 'LOW\n')
-        else:
-            # this company has no news even if we don't set a date
-            # add it into the lowest priority list
-            print("%s has no news at all, set as LOWEST priority" % (ticker))
-            ticker_failed.write(ticker + ',' + today + ',' + 'LOWEST\n')
-        ticker_failed.close()
 
-    def get_soup_with_repeat(self, url, repeat_times=3, verbose=True):
-        for i in range(repeat_times):  # repeat in case of http failure
+    def scraper(self, url, verbose=True):
+        for i in range(3):
             try:
                 time.sleep(np.random.poisson(3))
                 response = urlopen(url)
                 data = response.read().decode('utf-8')
                 return BeautifulSoup(data, "lxml")
             except Exception as e:
-                if i == 0:
-                    print(e)
-                if verbose:
-                    print('retry...')
-                continue
+                print(e)
 
-    def get_news_num_whenever(self, url):
-        # check the website to see if the ticker has any news
-        # return the number of news
-        soup = self.get_soup_with_repeat(url, repeat_times=4)
-        if soup:
-            return len(
-                soup.find_all(
-                    "div", {
-                        'class': [
-                            'topStory', 'feature']}))
+    def getNews(self, url):
+        scraped = self.scraper(url)
+        if scraped:
+            return len(scraped.find_all("div", {'class': ['topStory', 'feature']}))
         return 0
 
-    def fetch_within_date_range(self, news_num, url, date_range, task, ticker):
-        # if it doesn't have a single news for X consecutive days, stop iterating dates
-        # set this ticker into the second-lowest priority list
-        missing_days = 0
-        has_content = False
-        no_news_days = []
+    def fetchWithinRange(self, news_num, url, date_range, task, ticker):
+        noNewsDays = 0
+        newNews = False
+        noNewNewsDay = []
         for timestamp in date_range:
-            # print timestamp on the same line
             print('trying ' + timestamp, end='\r', flush=True)
-            # change 20151231 to 12312015 to match reuters format
             new_time = timestamp[4:] + timestamp[:4]
-            soup = self.get_soup_with_repeat(url + "?date=" + new_time)
-            if soup and self.parse_and_save_news(
+            soup = self.scraper(url + "?date=" + new_time)
+            if soup and self.writeNews(
                     soup, task, ticker, timestamp):
-                missing_days = 0  # if get news, reset missing_days as 0
-                has_content = True
+                noNewsDays = 0
+                newNews = True
             else:
-                missing_days += 1
+                noNewsDays += 1
 
-            # the more news_num, the longer we can wait
-            # e.g., if news_num is 2, we can wait up to 30 days; 10 news, wait
-            # up to 70 days
-            if missing_days > news_num * 5 + 20:
-                # no news in X consecutive days, stop crawling
+            if noNewsDays > news_num * 5 + 20:
                 print("%s has no news for %d days, stop this candidate ..." %
-                      (ticker, missing_days))
+                      (ticker, noNewsDays))
                 break
-            if missing_days > 0 and missing_days % 20 == 0:
-                no_news_days.append(timestamp)
+            if noNewsDays > 0 and noNewsDays % 20 == 0:
+                noNewNewsDay.append(timestamp)
 
-        return has_content, no_news_days
+        return newNews, noNewNewsDay
 
-    def parse_and_save_news(self, soup, task, ticker, timestamp):
+    def writeNews(self, soup, task, ticker, timestamp):
         content = soup.find_all("div", {'class': ['topStory', 'feature']})
         if not content:
             return False
-        with open(self.news_filename, 'a+', newline='\n') as fout:
+        with open(self.newsFile, 'a+', newline='\n') as fout:
             for i in range(len(content)):
-                title = content[i].h2.get_text().replace(
-                    ",", " ").replace("\n", " ")
-                body = content[i].p.get_text().replace(
-                    ",", " ").replace("\n", " ")
+                title = content[i].h2.get_text().replace(",", " ").replace("\n", " ")
+                body = content[i].p.get_text().replace(",", " ").replace("\n", " ")
 
                 if i == 0 and soup.find_all("div", class_="topStory"):
                     news_type = 'topStory'
@@ -156,14 +99,11 @@ class ReutersCrawler(object):
                     news_type = 'normal'
 
                 print(ticker, timestamp, title, news_type)
-                # fout.write(','.join([ticker, task[1], timestamp, title, body, news_type]).encode('utf-8') + '\n')
-                fout.write(
-                    ','.join([ticker, task[1], timestamp, title, body, news_type]) + '\n')
+                fout.write(','.join([ticker, task[1], timestamp, title, body, news_type]) + '\n')
         return True
 
     def generate_past_n_days(self, numdays):
         """Generate N days until now, e.g., [20151231, 20151230]."""
-        # print(numdays)
         base = datetime.datetime.today()
         date_range = [
             base - datetime.timedelta(days=x) for x in range(0, numdays)]
@@ -172,36 +112,18 @@ class ReutersCrawler(object):
 
     def run(self, numdays=60):
         """Start crawler back to numdays"""
-        finished_tickers = self.load_finished_tickers()
-        failed_tickers = self.load_failed_tickers()
-        date_range = self.generate_past_n_days(
-            60)  # look back on the past X days
+        date_range = self.generate_past_n_days(60)
 
-        # store low-priority task and run later
-        delayed_tasks = {'LOWEST': set(), 'LOW': set()}
-        with open(self.ticker_list_filename) as ticker_list:
-            for line in ticker_list:  # iterate all possible tickers
+        with open(self.tickerFile) as ticker_list:
+            for line in ticker_list:
                 task = tuple(line.strip().split(','))
                 ticker, name, exchange = task
-                if ticker in finished_tickers:
-                    continue
-                if ticker in failed_tickers:
-                    priority = failed_tickers[ticker]
-                    delayed_tasks[priority].add(task)
-                    continue
-                self.fetch_content(task, date_range)
-
-        # run task with low priority
-        for task in delayed_tasks['LOW']:
-            self.fetch_content(task, date_range)
-        # run task with lowest priority
-        for task in delayed_tasks['LOWEST']:
-            self.fetch_content(task, date_range)
+                self.fetchContent(task, date_range)
 
 
 def main():
     reuter_crawler = ReutersCrawler()
-    reuter_crawler.run(1)
+    reuter_crawler.run(60)
 
 
 if __name__ == "__main__":

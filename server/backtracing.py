@@ -1,13 +1,30 @@
-from analyzer import get_average_sentiment
-from prediction import predictData
 import csv
 import datetime
+import linecache
+import sys
+
+from analyzer import get_average_sentiment
+from prediction import predictData
 from stock import Stock_Obj
 
-
+# Global variables to decide which stocks should be held if negative / track history for past day
 prevDayStocks = []
 
 
+# holdStocks = []
+
+# Exception printer
+def PrintException():
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
+
+
+# Figuring out how much to invest given balance
 def getNumInvest(balance):
     if balance < 5000:
         return 3
@@ -18,6 +35,19 @@ def getNumInvest(balance):
     return 6
 
 
+# Figuring out how much to invest given balance and holding
+def getNumInvestHolding(balance):
+    holding = len(holdStocks)
+    if balance < 5000:
+        return 3 - holding
+    if balance < 10000:
+        return 4 - holding
+    if balance < 20000:
+        return 5 - holding
+    return 6 - holding
+
+
+# Figuring out how much to invest in each stock given balance
 def getInvestmentAmount(balance):
     if balance < 5000:
         return 350
@@ -28,9 +58,13 @@ def getInvestmentAmount(balance):
     return 3000
 
 
+# Analyser for each day
 def analyse(currentDayValues, currentDate, numInvest):
-    global prevDayStocks
+    global prevDayStocks, holdStocks
     results = {}
+
+    # Iterate through current day and average sentiment
+
     for stock in currentDayValues.keys():
         try:
             year = int(currentDate[0:4])
@@ -45,27 +79,38 @@ def analyse(currentDayValues, currentDate, numInvest):
                     results[stock] = val
         except:
             pass
+
+    # Sort results to find top numInvest
+
     results_sorted = list(
         {k: v for k, v in sorted(results.items(), key=lambda x: x[1])})
     if numInvest > len(results_sorted):
         numInvest = len(results_sorted)
     topNumInvest = results_sorted[:numInvest]
+    # topNumInvest = results_sorted[:numInvest] + holdStocks
     prevDayStocks = topNumInvest
     return topNumInvest
 
 
 if __name__ == "__main__":
-
     balance = 1000
 
     history = open('../data/history.csv', 'w')
     reader = csv.DictReader(open('../data/sorted_news.csv'))
     next(reader)
-    currentDayValues = {}
+
+    # Dictionary for current day values
+
+    currentDayValues = dict()
     currentDate = None
-    currentTicker = None
+
+    # Iterate through scraped news
+
     for row in reader:
         if balance > 0.01:
+
+            # Capture news for date
+
             if currentDate == None:
                 currentDate = row['date']
             if currentDate == row['date']:
@@ -79,24 +124,47 @@ if __name__ == "__main__":
                     res = analyse(currentDayValues, currentDate,
                                   getNumInvest(balance))
                     dayIncome = 0
+                    # holdStocks = []
+                    # holdTemp = {}
+
+                    # Code for calculating P/L for backtracer
                     for s in res:
                         obj = Stock_Obj(s)
                         historical = obj.getHistoricalPrice(currentDate)
+
+                        # if historical:
+                        #     diff = float(historical['close']) - float(historical['open'])
+                        #     if diff < 0:
+                        #         holdTemp[s] = diff
+                        #     print(s, round(diff, 2), getInvestmentAmount(balance),
+                        #           ((getInvestmentAmount(balance)) * diff), ' ')
+                        #     dayIncome += ((getInvestmentAmount(balance)) * diff)
+
+                        # Calculating diff
+
                         diff = float(historical['close']) - \
-                            float(historical['open'])
+                               float(historical['open'])
                         print(s, round(diff, 2), getInvestmentAmount(balance),
-                              ((getInvestmentAmount(balance))*diff),  ' ')
-                        dayIncome += ((getInvestmentAmount(balance))*diff)
+                              ((getInvestmentAmount(balance)) * diff), ' ')
+
+                        # Add to day's income
+
+                        dayIncome += ((getInvestmentAmount(balance)) * diff)
+
+                    # Calculating growth and balance
                     growth = dayIncome / getInvestmentAmount(balance)
                     balance += dayIncome
                     out = currentDate + ', ' + \
-                        str(res) + ', ' + str(balance) + \
-                        ', ' + str(growth) + '\n'
+                          str(res) + ', ' + str(balance) + \
+                          ', ' + str(growth) + '\n'
                     history.write(out)
                     print(out)
                 except:
-                    pass
+                    PrintException()
+
+                # Reset
+
                 currentDate = row['date']
-                currentDayValues = {}
+                currentDayValues = dict()
                 currentDayValues[row['ticker']] = [row['headline']]
     history.close()
