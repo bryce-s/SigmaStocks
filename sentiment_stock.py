@@ -6,6 +6,29 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from nltk import tokenize
 import decimal
 import matplotlib.pyplot as plt
+import math
+
+# function handles computing the correlation coefficient between the sentiment score and stock prices
+def compute_correlation(sentiments, prices):
+	# sentiment magnitude
+	sent_mag = 0
+	for sent in sentiments:
+		sent_mag += (sent * sent)
+	
+	# prices magnitude
+	price_mag = 0
+	for price in prices:
+		price_mag += (price * price)
+
+	# dot product
+	prod = 0
+	for i in range(len(sentiments)):
+		prod += (sentiments[i] * prices[i])
+
+	# correlation coefficients
+	corr_coef = prod / (math.sqrt(sent_mag * price_mag))
+
+	return(corr_coef)
 
 # function handles taking headline and returning sentiment score
 def get_average_sentiment(input_list):
@@ -95,6 +118,10 @@ def main():
 	plt.ylabel("Sentiment")
 	plt.title(ticker + " Sentiment Score")
 	plt.show()
+
+	# print the correlation coefficient
+	corr_coef = compute_correlation(sentiments, prices)
+	print("correlation coefficient = " + str(corr_coef))
 	
 if __name__ == "__main__":
 	main()
