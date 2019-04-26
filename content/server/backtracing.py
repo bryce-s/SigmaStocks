@@ -95,7 +95,10 @@ def analyse(currentDayValues, currentDate, numInvest):
 
 
 if __name__ == "__main__":
-    global numPositiveInvestment, numNegativeInvestment, numCorrect, numWrong
+    numPositiveInvestment = 0
+    numNegativeInvestment = 0
+    numCorrect = 0
+    numWrong = 0 
     balance = 1000
 
     history = open('../data/history.csv', 'w')
