@@ -3,15 +3,17 @@ import datetime
 import linecache
 import sys
 
-from analyzer import get_average_sentiment
-from prediction import predictData
-from stock import Stock_Obj
+from .analyzer import get_average_sentiment
+from .prediction import predictData
+from .stock import Stock_Obj
 
 # Global variables to decide which stocks should be held if negative / track history for past day
 prevDayStocks = []
+holdStocks = []
 
+numPositiveInvestment = 0
+numNegativeInvestment = 0
 
-# holdStocks = []
 
 # Exception printer
 def PrintException():
@@ -60,7 +62,7 @@ def getInvestmentAmount(balance):
 
 # Analyser for each day
 def analyse(currentDayValues, currentDate, numInvest):
-    global prevDayStocks, holdStocks
+    global prevDayStocks, holdStocks, numCorrect, numWrong
     results = {}
 
     # Iterate through current day and average sentiment
@@ -93,6 +95,7 @@ def analyse(currentDayValues, currentDate, numInvest):
 
 
 if __name__ == "__main__":
+    global numPositiveInvestment, numNegativeInvestment, numCorrect, numWrong
     balance = 1000
 
     history = open('../data/history.csv', 'w')
@@ -134,7 +137,6 @@ if __name__ == "__main__":
 
                         # if historical:
                         #     diff = float(historical['close']) - float(historical['open'])
-                        #     if diff < 0:
                         #         holdTemp[s] = diff
                         #     print(s, round(diff, 2), getInvestmentAmount(balance),
                         #           ((getInvestmentAmount(balance)) * diff), ' ')
@@ -144,6 +146,10 @@ if __name__ == "__main__":
 
                         diff = float(historical['close']) - \
                                float(historical['open'])
+                        if diff < 0:
+                            numNegativeInvestment += 1
+                        else:
+                            numPositiveInvestment += 1
                         print(s, round(diff, 2), getInvestmentAmount(balance),
                               ((getInvestmentAmount(balance)) * diff), ' ')
 
@@ -167,4 +173,7 @@ if __name__ == "__main__":
                 currentDate = row['date']
                 currentDayValues = dict()
                 currentDayValues[row['ticker']] = [row['headline']]
+    print('Number Positive Investment: ', numPositiveInvestment)
+    print('Number Negative Investment: ', numNegativeInvestment)
+    print('Accuracy:', 100 * numPositiveInvestment / (numPositiveInvestment + numNegativeInvestment), '%', ' ')
     history.close()
