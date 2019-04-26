@@ -1,0 +1,111 @@
+match: Bed Bath & Beyond Inc.
+match: Barrick Gold Corporation
+match: Spartan Motors, Inc.
+match: ON Semiconductor Corporation
+match: The Lovesac Company
+match: Apple Inc.
+match: PriceSmart, Inc.
+match: ON Semiconductor Corporation
+match: ON Semiconductor Corporation
+match: Hasbro, Inc.
+match: ON Semiconductor Corporation
+match: Gladstone Commercial Corporation
+match: ON Semiconductor Corporation
+match: First Solar, Inc.
+match: Lyft, Inc.
+match: Tesla, Inc.
+match: The Long-Term Care ETF
+match: Diamondback Energy, Inc.
+match: Sky Solar Holdings, Ltd.
+match: Apple Inc.
+match: Meta Financial Group, Inc.
+match: Apple Inc.
+match: Apple Inc.
+match: Gladstone Commercial Corporation
+match: Apple Inc.
+match: ON Semiconductor Corporation
+match: OrthoPediatrics Corp.
+match: Nasdaq, Inc.
+match: ON Semiconductor Corporation
+match: Five Below, Inc.
+match: Altaba Inc.
+match: ON Semiconductor Corporation
+match: Richardson Electronics, Ltd.
+match: ON Semiconductor Corporation
+match: Bed Bath & Beyond Inc.
+match: ON Semiconductor Corporation
+match: Netflix, Inc.
+match: ON Semiconductor Corporation
+match: SeaChange International, Inc.
+match: Syros Pharmaceuticals, Inc.
+match: NIC Inc.
+match: NICE Ltd
+match: EverQuote, Inc.
+match: ON Semiconductor Corporation
+match: NextDecade Corporation
+match: NIC Inc.
+match: Nicholas Financial, Inc.
+match: ON Semiconductor Corporation
+match: ON Semiconductor Corporation
+match: bluebird bio, Inc.
+match: Nasdaq, Inc.
+match: Lyft, Inc.
+match: ON Semiconductor Corporation
+match: Broadcom Inc.
+match: Tesla, Inc.
+match: Bio-Techne Corp
+match: Bio-Techne Corp
+match: Hasbro, Inc.
+match: Nasdaq, Inc.
+match: Dave & Buster&#39;s Entertainment, Inc.
+match: Gladstone Commercial Corporation
+match: Facebook, Inc.
+match: Spark Therapeutics, Inc.
+match: Gladstone Commercial Corporation
+match: Spark Therapeutics, Inc.
+match: New Age Beverages Corporation
+match: Hasbro, Inc.
+match: Monotype Imaging Holdings Inc.
+match: Nasdaq, Inc.
+match: Village Farms International, Inc.
+match: Gladstone Investment Corporation
+match: NextDecade Corporation
+match: ON Semiconductor Corporation
+match: Village Farms International, Inc.
+match: Village Farms International, Inc.
+match: Village Farms International, Inc.
+match: Nasdaq, Inc.
+match: Village Farms International, Inc.
+match: Gladstone Investment Corporation
+match: ON Semiconductor Corporation
+match: Nasdaq, Inc.
+match: Village Farms International, Inc.
+match: Hasbro, Inc.
+match: Nasdaq, Inc.
+match: Village Farms International, Inc.
+match: Nasdaq, Inc.
+match: Village Farms International, Inc.
+match: 51job, Inc.
+match: ON Semiconductor Corporation
+match: Interface, Inc.
+match: Gladstone Commercial Corporation
+match: Barrick Gold Corporation
+match: NextDecade Corporation
+match: NextDecade Corporation
+match: The Long-Term Care ETF
+match: ON Semiconductor Corporation
+match: ON Semiconductor Corporation
+match: ON Semiconductor Corporation
+match: ON Semiconductor Corporation
+match: Electronic Arts Inc.
+match: 111, Inc.
+match: Barclays PLC
+match: 51job, Inc.
+match: ON Semiconductor Corporation
+match: ON Semiconductor Corporation
+match: NextDecade Corporation
+match: Marriott International
+match: Marriott International
+match: Marriott International
+match: Marriott International
+match: Marriott International
